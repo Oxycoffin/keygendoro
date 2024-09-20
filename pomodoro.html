@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Timer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00ccff;
+            --secondary-color: #66ffff;
+            --background-gradient-from: #0d0d0d;
+            --background-gradient-to: #121212;
+            --button-gradient-angle: 45deg;
+            --glare-color: rgba(0, 204, 255, 0.5);
+            --cursor-color: rgba(0, 204, 255, 0.7);
+            --button-text-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Press Start 2P', cursive;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            background: radial-gradient(circle at center, var(--background-gradient-from), var(--background-gradient-to)), url('https://www.transparenttextures.com/patterns/dark-mosaic.png');
+            color: var(--primary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Mantener oculto el scroll global */
+            position: relative;
+            cursor: none;
+            animation: backgroundPulse 20s infinite alternate;
+        }
+
+        @keyframes backgroundPulse {
+            from { background-color: var(--background-gradient-from); }
+            to { background-color: var(--background-gradient-to); }
+        }
+
+        .pomodoro-container {
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 1vh; /* Reducido de 1vh a 0.5vh */
+            width: 100%;
+            max-width: 40%; /* Ajuste para mejor responsividad */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: slideIn 1s ease-out;
+            position: relative;
+            box-shadow: 0 0 4px var(--primary-color);
+            background-image: url('https://www.transparenttextures.com/patterns/small-dots.png');
+            transition: border-color 0.5s ease, box-shadow 0.5s ease, background 0.5s ease;
+            max-height: 100vh; /* Aumentado para mejor uso del espacio */
+            overflow: hidden;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            white-space: pre;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 0.1rem; /* Reducido de 0.8rem a 0.4rem */
+            margin-top: 0.1rem; /* Añadido margen superior */
+            text-shadow: 0 0 2px var(--glare-color), 0 0 5px var(--glare-color);
+            animation: glowText 2s infinite alternate;
+        }
+
+        @keyframes glowText {
+            from { text-shadow: 0 0 2px var(--glare-color), 0 0 5px var(--glare-color); }
+            to { text-shadow: 0 0 5px var(--secondary-color), 0 0 10px var(--secondary-color); }
+        }
+
+        h2 {
+            margin-bottom: 0.6rem;
+            font-size: 1rem;
+            text-align: center;
+            color: var(--secondary-color);
+            text-shadow: 0 0 1px var(--glare-color), 0 0 3px var(--glare-color);
+            animation: flicker 3s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        label {
+            align-self: flex-start;
+            margin-bottom: 0.2rem;
+            font-size: 0.6rem;
+            color: var(--primary-color);
+            text-shadow: 0.5px 0.5px 1px #000;
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            padding: 0.3rem;
+            margin-bottom: 0.8rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 4px;
+            background: #1e1e1e;
+            color: #ffffff;
+            font-size: 0.6rem;
+            appearance: none;
+            cursor: pointer;
+            box-shadow: inset 0 0 2px var(--primary-color);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, font-size 0.3s ease;
+        }
+
+        /* Eliminado el pointer-events para que los inputs sean siempre interactivos */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+            /* Eliminado: pointer-events: none; */
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--secondary-color);
+            box-shadow: inset 0 0 3px var(--secondary-color);
+            outline: none;
+        }
+
+        select:hover, select:focus, input[type="number"]:hover, input[type="number"]:focus {
+            border-color: var(--secondary-color);
+            box-shadow: inset 0 0 3px var(--secondary-color);
+        }
+
+        .controls {
+            display: flex;
+            gap: 0.6rem;
+            margin-top: 0.8rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        button.control-btn {
+            padding: 0.4rem 0.8rem;
+            background: linear-gradient(var(--button-gradient-angle), var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 4px;
+            color: var(--button-text-color);
+            font-size: 0.6rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.5s ease, background 0.5s ease;
+            box-shadow: 0 0 2px var(--primary-color), 0 0 5px var(--primary-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button.control-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+        }
+
+        button.control-btn:hover::before {
+            top: 0;
+            left: 0;
+        }
+
+        button.control-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 3px var(--secondary-color), 0 0 6px var(--secondary-color);
+        }
+
+        button.control-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 0 2px var(--primary-color), 0 0 4px var(--primary-color);
+        }
+
+        .timer-display {
+            font-size: 2vh;
+            margin-top: 1rem;
+            color: var(--secondary-color);
+            text-shadow: 0 0 1px var(--glare-color), 0 0 3px var(--glare-color);
+            animation: flicker 3s infinite;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 1.5rem; /* Aumentado el tamaño */
+            background: #333333;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 0.8rem;
+            display: none;
+            position: relative;
+            box-shadow: inset 0 0 4px var(--primary-color); /* Aumentado para mejor visibilidad */
+            transition: box-shadow 0.5s ease;
+        }
+
+        .progress-bar {
+            height: 1.5rem; /* Aumentado el tamaño */
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 0.3s ease;
+        }
+
+        .progress-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.7rem; /* Aumentado el tamaño */
+            color: #ffffff;
+            text-shadow: 0.5px 0.5px 1px #000;
+        }
+
+        .session-counter {
+            margin-top: 0.8rem;
+            font-size: 0.6rem;
+            color: var(--secondary-color);
+            text-shadow: 0.5px 0.5px 1px var(--glare-color), 0 0 3px var(--glare-color);
+        }
+
+        .task-section {
+            width: 100%;
+            margin-top: 0.8rem;
+        }
+
+        .task-section h3 {
+            font-size: 0.7rem;
+            margin-bottom: 0.2rem;
+            color: var(--primary-color);
+            text-shadow: 0 0 1px var(--glare-color), 0 0 3px var(--glare-color);
+        }
+
+        .task-list {
+            list-style: none;
+            width: 100%;
+            height: 2.5rem; /* Tamaño fijo */
+            overflow-y: auto; /* Permitir desplazamiento interno */
+            background: #1e1e1e;
+            border: 2px solid var(--primary-color);
+            border-radius: 4px;
+            padding: 0.2rem;
+            box-shadow: inset 0 0 2px var(--primary-color);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .task-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .task-list::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+
+        .task-list::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        .task-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.2rem;
+            border-bottom: 1px solid #333;
+            color: #ffffff;
+            font-size: 0.5rem;
+            cursor: pointer;
+        }
+
+        .task-list li:last-child {
+            border-bottom: none;
+        }
+
+        .task-list li.completed {
+            text-decoration: line-through;
+            color: var(--secondary-color);
+        }
+
+        .task-list button {
+            background: none;
+            border: none;
+            color: var(--button-text-color);
+            cursor: pointer;
+            font-size: 0.6rem;
+            margin-left: 0.2rem;
+        }
+
+        .task-list button.complete-btn:hover {
+            color: #66ff66;
+        }
+
+        .task-list button.delete-btn:hover {
+            color: #ff6666;
+        }
+
+        .add-task {
+            display: flex;
+            gap: 0.2rem;
+            margin-top: 0.2rem;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .add-task input {
+            flex: 1;
+            border: 2px solid var(--primary-color);
+            border-radius: 4px;
+            background: #1e1e1e;
+            color: #ffffff;
+            padding: 0.3rem;
+            font-size: 0.6rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            cursor: text; /* Indicador de que es editable */
+        }
+
+        .add-task input:focus {
+            border-color: var(--secondary-color);
+            box-shadow: inset 0 0 3px var(--secondary-color);
+            outline: none;
+        }
+
+        .add-task button {
+            padding: 0.3rem 0.6rem;
+            background: linear-gradient(var(--button-gradient-angle), var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 4px;
+            color: var(--button-text-color);
+            font-size: 0.6rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.5s ease, background 0.5s ease;
+            box-shadow: 0 0 2px var(--primary-color), 0 0 5px var(--primary-color);
+        }
+
+        .add-task button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 3px var(--secondary-color), 0 0 6px var(--secondary-color);
+        }
+
+        .footer {
+            margin-top: 0.8rem;
+            font-size: 0.5rem;
+            color: #666666;
+            text-align: center;
+            text-shadow: 0.5px 0.5px 1px #000;
+            animation: floatFooter 4s ease-in-out infinite;
+        }
+
+        @keyframes floatFooter {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+        }
+
+        .music-control {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.5s ease, transform 0.3s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+            box-shadow: 0 0 2px var(--primary-color), 0 0 5px var(--primary-color);
+        }
+
+        .music-control:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+            box-shadow: 0 0 3px var(--secondary-color), 0 0 6px var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        .music-control img {
+            width: 10px;
+            height: 10px;
+            filter: brightness(0) invert(1);
+            transition: transform 0.3s ease;
+        }
+
+        #customCursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 6px;
+            background-color: var(--cursor-color);
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            animation: pulse 2s infinite;
+            z-index: 1000;
+            transition: transform 0.2s ease, background-color 0.5s ease, border-color 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.6; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .pomodoro-container {
+                padding: 1rem;
+                max-width: 90%;
+            }
+
+            .header {
+                font-size: 0.4rem;
+            }
+
+            h2 {
+                font-size: 0.8rem;
+            }
+
+            .controls button.control-btn {
+                font-size: 0.5rem;
+                padding: 0.3rem 0.6rem;
+            }
+
+            .timer-display {
+                font-size: 1.8rem;
+            }
+
+            .music-control {
+                width: 15px;
+                height: 15px;
+            }
+
+            .music-control img {
+                width: 8px;
+                height: 8px;
+            }
+
+            #customCursor {
+                width: 8px;
+                height: 8px;
+            }
+
+            .task-section h3 {
+                font-size: 0.6rem;
+            }
+
+            .task-list li {
+                font-size: 0.3rem;
+            }
+
+            .add-task button {
+                padding: 0.1rem 0.3rem;
+                font-size: 0.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .pomodoro-container {
+                padding: 0.6rem;
+                max-width: 85%;
+            }
+
+            .header {
+                font-size: 0.3rem;
+            }
+
+            h2 {
+                font-size: 0.6rem;
+            }
+
+            .controls button.control-btn {
+                font-size: 0.4rem;
+                padding: 0.2rem 0.5rem;
+            }
+
+            .timer-display {
+                font-size: 1.5rem;
+            }
+
+            .music-control {
+                width: 15px;
+                height: 15px;
+            }
+
+            .music-control img {
+                width: 8px;
+                height: 8px;
+            }
+
+            #customCursor {
+                width: 6px;
+                height: 6px;
+            }
+
+            .task-section h3 {
+                font-size: 0.5rem;
+            }
+
+            .task-list li {
+                font-size: 0.3rem;
+            }
+
+            .add-task button {
+                padding: 0.1rem 0.3rem;
+                font-size: 0.4rem;
+            }
+        }
+
+        .interactive:hover #customCursor,
+        .interactive:focus #customCursor {
+            transform: translate(-50%, -50%) scale(1.5);
+            background-color: #ff6600;
+            border: 2px solid #ff6600;
+        }
+    </style>
+</head>
+<body>
+    <div id="customCursor"></div>
+    <div class="pomodoro-container">
+        <!-- Bloque de Anuncio de AdSense -->
+        <div class="adsense-ad" style="width: 100%; margin-bottom: 1rem;">
+            <!-- Reemplaza este bloque con tu código de AdSense -->
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"  <!-- Reemplaza con tu propio ID de cliente -->
+                 data-ad-slot="YYYYYYYYYY"                  <!-- Reemplaza con tu propio ID de slot -->
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+            <!-- Fin del bloque de AdSense -->
+        </div>
+        <!-- Resto de tu contenido existente -->
+        <div class="music-control interactive" id="musicControl">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/mute.png" alt="Mute/Unmute" id="musicIcon">
+</div>
+<div class="header">
+<pre style="font-family: 'Courier New', monospace; white-space: pre; line-height: 1; font-size: 10px;">
+██████╗  ██████╗ ███╗   ███╗ ██████╗ ██████╗  ██████╗ ██████╗  ██████╗
+██╔══██╗██╔═══██╗████╗ ████║██╔═══██╗██╔══██╗██╔═══██╗██╔══██╗██╔═══██╗
+██████╔╝██║   ██║██╔████╔██║██║   ██║██║  ██║██║   ██║██████╔╝██║   ██║
+██╔═══╝ ██║   ██║██║╚██╔╝██║██║   ██║██║  ██║██║   ██║██╔══██╗██║   ██║
+██║     ╚██████╔╝██║ ╚═╝ ██║╚██████╔╝██████╔╝╚██████╔╝██║  ██║╚██████╔╝
+╚═╝      ╚═════╝ ╚═╝     ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝
+</pre>
+</div>
+<h2>Timer</h2>
+        <label for="sessionType">Tipo de Sesión:</label>
+        <select id="sessionType" class="interactive">
+            <option value="work">Trabajo</option>
+            <option value="shortBreak">Descanso Corto</option>
+            <option value="longBreak">Descanso Largo</option>
+        </select>
+        <div class="task-section">
+            <h3>Personalizar Duraciones:</h3>
+            <div class="add-task">
+                <label for="workDuration">Trabajo:</label>
+                <input type="number" id="workDuration" min="1" value="25" class="interactive">
+            </div>
+            <div class="add-task">
+                <label for="shortBreakDuration">Descanso Corto:</label>
+                <input type="number" id="shortBreakDuration" min="1" value="5" class="interactive">
+            </div>
+            <div class="add-task">
+                <label for="longBreakDuration">Descanso Largo:</label>
+                <input type="number" id="longBreakDuration" min="1" value="15" class="interactive">
+            </div>
+            <button class="control-btn interactive" id="saveDurationsBtn">Guardar</button>
+        </div>
+        <div class="timer-display" id="timerDisplay">25:00</div>
+        <div class="controls">
+            <button class="control-btn interactive" id="startPauseBtn">Iniciar</button>
+            <button class="control-btn interactive" id="resetBtn">Reiniciar</button>
+        </div>
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+            <div class="progress-percentage" id="progressPercentage">0%</div>
+        </div>
+        <div class="session-counter" id="sessionCounter">Sesiones completadas: 0</div>
+        <div class="task-section">
+            <h3>Lista de Tareas:</h3>
+            <ul class="task-list interactive" id="taskList"></ul>
+            <div class="add-task">
+                <input type="text" id="newTaskInput" placeholder="Nueva tarea..." class="interactive">
+                <button class="control-btn interactive" id="addTaskBtn">Añadir</button>
+            </div>
+        </div>
+        <div class="footer">2000© no rights reserved</div>
+    </div>
+    <audio id="backgroundMusic" loop>
+        <source src="midi.mp3" type="audio/mpeg">
+        <source src="midi.ogg" type="audio/ogg">
+        Tu navegador no soporta la reproducción de audio.
+    </audio>
+    <audio id="notificationSound">
+        <source src="notification.mp3" type="audio/mpeg">
+        <source src="notification.ogg" type="audio/ogg">
+        Tu navegador no soporta la reproducción de audio.
+    </audio>
+    <script>
+        const startPauseBtn = document.getElementById('startPauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const sessionTypeSelect = document.getElementById('sessionType');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const progressPercentage = document.getElementById('progressPercentage');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const musicControl = document.getElementById('musicControl');
+        const musicIcon = document.getElementById('musicIcon');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const sessionCounter = document.getElementById('sessionCounter');
+        const customCursor = document.getElementById('customCursor');
+        const root = document.documentElement;
+        const saveDurationsBtn = document.getElementById('saveDurationsBtn');
+        const workDurationInput = document.getElementById('workDuration');
+        const shortBreakDurationInput = document.getElementById('shortBreakDuration');
+        const longBreakDurationInput = document.getElementById('longBreakDuration');
+        const taskList = document.getElementById('taskList');
+        const addTaskBtn = document.getElementById('addTaskBtn');
+        const newTaskInput = document.getElementById('newTaskInput');
+        const notificationSound = document.getElementById('notificationSound');
+
+        let isMusicMuted = false;
+        let timerDuration = 25 * 60;
+        let timerRemaining = timerDuration;
+        let timerInterval = null;
+        let isRunning = false;
+        let currentSession = 'work';
+        let completedSessions = 0;
+        let endTime = null; // Nueva variable para almacenar el tiempo de finalización
+
+        function loadData() {
+            // Cargar sesiones completadas
+            if (localStorage.getItem('completedSessions')) {
+                completedSessions = parseInt(localStorage.getItem('completedSessions'), 10);
+                sessionCounter.textContent = `Sesiones completadas: ${completedSessions}`;
+            }
+
+            // Cargar tareas
+            if (localStorage.getItem('tasks')) {
+                const tasks = JSON.parse(localStorage.getItem('tasks'));
+                tasks.forEach(task => addTaskToDOM(task));
+            }
+
+            // Cargar duraciones personalizadas
+            loadDurations();
+
+            // Cargar estado del contador
+            if (localStorage.getItem('timerState')) {
+                const timerState = JSON.parse(localStorage.getItem('timerState'));
+                endTime = timerState.endTime;
+                currentSession = timerState.currentSession;
+                sessionTypeSelect.value = currentSession;
+                timerDuration = getDurationBySession(currentSession);
+                const now = Date.now();
+                timerRemaining = Math.floor((endTime - now) / 1000);
+
+                if (timerRemaining > 0) {
+                    timerDisplay.textContent = formatTime(timerRemaining);
+                    progressContainer.style.display = 'block';
+                    updateProgress();
+                    startTimer(false); // Iniciar el temporizador sin guardar nuevamente el estado
+                } else {
+                    handleSessionEnd();
+                }
+            }
+
+            // Cargar estado de la música
+            if (localStorage.getItem('isMusicMuted')) {
+                isMusicMuted = JSON.parse(localStorage.getItem('isMusicMuted'));
+                backgroundMusic.muted = isMusicMuted;
+                updateMusicIcon();
+            }
+        }
+
+        const colorPalettes = [
+            {
+                primary: '#00ccff',
+                secondary: '#66ffff',
+                gradientFrom: '#0d0d0d',
+                gradientTo: '#121212',
+                gradientAngle: '45deg',
+                cursorColor: 'rgba(0, 204, 255, 0.7)'
+            },
+            {
+                primary: '#ff66cc',
+                secondary: '#ff99ee',
+                gradientFrom: '#1a0d0d',
+                gradientTo: '#2c1212',
+                gradientAngle: '60deg',
+                cursorColor: 'rgba(255, 102, 204, 0.7)'
+            },
+            {
+                primary: '#66ff66',
+                secondary: '#99ff99',
+                gradientFrom: '#0d1a0d',
+                gradientTo: '#121c12',
+                gradientAngle: '30deg',
+                cursorColor: 'rgba(102, 255, 102, 0.7)'
+            },
+            {
+                primary: '#ffcc00',
+                secondary: '#ffe066',
+                gradientFrom: '#1a1a0d',
+                gradientTo: '#2c2c12',
+                gradientAngle: '90deg',
+                cursorColor: 'rgba(255, 204, 0, 0.7)'
+            },
+            {
+                primary: '#cc00ff',
+                secondary: '#e066ff',
+                gradientFrom: '#0d0d1a',
+                gradientTo: '#12122c',
+                gradientAngle: '135deg',
+                cursorColor: 'rgba(204, 0, 255, 0.7)'
+            }
+        ];
+
+        function selectRandomPalette() {
+            const palette = colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
+            return palette;
+        }
+
+        function updateSessionType() {
+            const selectedType = sessionTypeSelect.value;
+            currentSession = selectedType;
+            timerDuration = getDurationBySession(currentSession);
+            timerRemaining = timerDuration;
+            timerDisplay.textContent = formatTime(timerRemaining);
+            progressBar.style.width = '0%';
+            progressPercentage.textContent = '0%';
+            progressContainer.style.display = 'none';
+            resetMusic();
+            clearTimerState();
+        }
+
+        function getDurationBySession(session) {
+            switch(session) {
+                case 'work':
+                    return parseInt(workDurationInput.value, 10) * 60;
+                case 'shortBreak':
+                    return parseInt(shortBreakDurationInput.value, 10) * 60;
+                case 'longBreak':
+                    return parseInt(longBreakDurationInput.value, 10) * 60;
+                default:
+                    return 25 * 60;
+            }
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer(shouldSave = true) {
+            if (isRunning) return;
+            isRunning = true;
+            startPauseBtn.textContent = 'Pausar';
+            progressContainer.style.display = 'block';
+            
+            if (shouldSave) {
+                endTime = Date.now() + timerRemaining * 1000;
+                localStorage.setItem('timerState', JSON.stringify({
+                    endTime,
+                    currentSession
+                }));
+            }
+
+            timerInterval = setInterval(() => {
+                const now = Date.now();
+                timerRemaining = Math.floor((endTime - now) / 1000);
+
+                if (timerRemaining > 0) {
+                    timerDisplay.textContent = formatTime(timerRemaining);
+                    const progress = ((timerDuration - timerRemaining) / timerDuration) * 100;
+                    progressBar.style.width = `${progress}%`;
+                    progressPercentage.textContent = `${Math.floor(progress)}%`;
+                } else {
+                    clearInterval(timerInterval);
+                    isRunning = false;
+                    startPauseBtn.textContent = 'Iniciar';
+                    timerDisplay.textContent = formatTime(0);
+                    progressBar.style.width = '100%';
+                    progressPercentage.textContent = '100%';
+                    progressContainer.style.display = 'none';
+                    clearTimerState();
+                    handleSessionEnd();
+                }
+            }, 1000);
+            playMusic();
+        }
+
+        function pauseTimer() {
+            if (!isRunning) return;
+            isRunning = false;
+            startPauseBtn.textContent = 'Iniciar';
+            clearInterval(timerInterval);
+            pauseMusic();
+            clearTimerState();
+            changePalette(); // Cambiar paleta al pausar
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            startPauseBtn.textContent = 'Iniciar';
+            timerRemaining = timerDuration;
+            timerDisplay.textContent = formatTime(timerRemaining);
+            progressBar.style.width = '0%';
+            progressPercentage.textContent = '0%';
+            progressContainer.style.display = 'none';
+            pauseMusic();
+            clearTimerState();
+        }
+
+        function handleSessionEnd() {
+            pauseMusic();
+            notificationSound.play();
+            if (currentSession === 'work') {
+                completedSessions++;
+                sessionCounter.textContent = `Sesiones completadas: ${completedSessions}`;
+                localStorage.setItem('completedSessions', completedSessions);
+            }
+            notifyUser(`¡${capitalizeFirstLetter(currentSession)} finalizada!`);
+            if (currentSession === 'work') {
+                if (completedSessions % 4 === 0) {
+                    sessionTypeSelect.value = 'longBreak';
+                } else {
+                    sessionTypeSelect.value = 'shortBreak';
+                }
+            } else {
+                sessionTypeSelect.value = 'work';
+            }
+            updateSessionType();
+        }
+
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        function notifyUser(message) {
+            if (Notification.permission === 'granted') {
+                new Notification(message);
+            } else if (Notification.permission !== 'denied') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        new Notification(message);
+                    }
+                });
+            }
+        }
+
+        function resetMusic() {
+            backgroundMusic.pause();
+            backgroundMusic.currentTime = 0;
+            if (!isMusicMuted) {
+                musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/speaker.png";
+            }
+        }
+
+        function playMusic() {
+            if (!isMusicMuted) {
+                backgroundMusic.play().then(() => {
+                    musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/speaker.png";
+                }).catch(error => {
+                    console.log('No se pudo reproducir la música.');
+                });
+            }
+        }
+
+        function pauseMusic() {
+            backgroundMusic.pause();
+            musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/mute.png";
+        }
+
+        function changePalette() {
+            const palette = selectRandomPalette();
+            root.style.setProperty('--primary-color', palette.primary);
+            root.style.setProperty('--secondary-color', palette.secondary);
+            root.style.setProperty('--background-gradient-from', palette.gradientFrom);
+            root.style.setProperty('--background-gradient-to', palette.gradientTo);
+            root.style.setProperty('--button-gradient-angle', palette.gradientAngle);
+            root.style.setProperty('--cursor-color', palette.cursorColor);
+            customCursor.style.backgroundColor = palette.cursorColor;
+            customCursor.style.borderColor = palette.primary;
+        }
+
+        function updateProgress() {
+            const progress = ((timerDuration - timerRemaining) / timerDuration) * 100;
+            progressBar.style.width = `${progress}%`;
+            progressPercentage.textContent = `${Math.floor(progress)}%`;
+        }
+
+        startPauseBtn.addEventListener('click', () => {
+            if (isRunning) {
+                pauseTimer();
+            } else {
+                startTimer();
+                changePalette(); // Cambiar paleta al iniciar
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            resetTimer();
+            changePalette(); // Cambiar paleta al reiniciar
+        });
+
+        sessionTypeSelect.addEventListener('change', () => {
+            updateSessionType();
+        });
+
+        saveDurationsBtn.addEventListener('click', () => {
+            const work = parseInt(workDurationInput.value, 10);
+            const shortBreak = parseInt(shortBreakDurationInput.value, 10);
+            const longBreak = parseInt(longBreakDurationInput.value, 10);
+
+            if (isNaN(work) || isNaN(shortBreak) || isNaN(longBreak) || work < 1 || shortBreak < 1 || longBreak < 1) {
+                alert('Por favor, introduce duraciones válidas (minutos) para todas las sesiones.');
+                return;
+            }
+
+            localStorage.setItem('workDuration', work);
+            localStorage.setItem('shortBreakDuration', shortBreak);
+            localStorage.setItem('longBreakDuration', longBreak);
+
+            alert('Duraciones guardadas exitosamente.');
+            updateSessionType();
+
+            changePalette(); // Cambiar paleta al guardar duraciones
+        });
+
+        function loadDurations() {
+            const work = localStorage.getItem('workDuration');
+            const shortBreak = localStorage.getItem('shortBreakDuration');
+            const longBreak = localStorage.getItem('longBreakDuration');
+
+            if (work) workDurationInput.value = work;
+            if (shortBreak) shortBreakDurationInput.value = shortBreak;
+            if (longBreak) longBreakDurationInput.value = longBreak;
+
+            updateSessionType();
+        }
+
+        function addTaskToDOM(task) {
+            const li = document.createElement('li');
+            li.textContent = task.name;
+            li.setAttribute('data-id', task.id);
+            if (task.completed) {
+                li.classList.add('completed');
+            }
+
+            const completeBtn = document.createElement('button');
+            completeBtn.textContent = 'DONE';
+            completeBtn.title = 'Marcar como completado';
+            completeBtn.classList.add('complete-btn');
+            completeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                li.classList.toggle('completed');
+                task.completed = !task.completed;
+                saveTasks();
+            });
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'ERASE';
+            deleteBtn.title = 'Eliminar tarea';
+            deleteBtn.classList.add('delete-btn');
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                li.remove();
+                deleteTask(task.id);
+            });
+
+            li.appendChild(completeBtn);
+            li.appendChild(deleteBtn);
+            taskList.appendChild(li);
+        }
+
+        function addTask() {
+            const taskName = newTaskInput.value.trim();
+            if (taskName === '') {
+                alert('Por favor, introduce una tarea.');
+                return;
+            }
+
+            const task = {
+                id: Date.now(),
+                name: taskName,
+                completed: false
+            };
+
+            addTaskToDOM(task);
+            saveTask(task);
+            newTaskInput.value = '';
+        }
+
+        addTaskBtn.addEventListener('click', () => {
+            addTask();
+            changePalette(); // Cambiar paleta al añadir una tarea
+        });
+
+        newTaskInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addTask();
+            }
+        });
+
+        function saveTask(task) {
+            let tasks = [];
+            if (localStorage.getItem('tasks')) {
+                tasks = JSON.parse(localStorage.getItem('tasks'));
+            }
+            tasks.push(task);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function saveTasks() {
+            const tasks = [];
+            const lis = taskList.querySelectorAll('li');
+            lis.forEach(li => {
+                const name = li.childNodes[0].nodeValue.trim();
+                const completed = li.classList.contains('completed');
+                const id = parseInt(li.getAttribute('data-id'), 10);
+                tasks.push({ id, name, completed });
+            });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function deleteTask(id) {
+            let tasks = [];
+            if (localStorage.getItem('tasks')) {
+                tasks = JSON.parse(localStorage.getItem('tasks'));
+                tasks = tasks.filter(task => task.id !== id);
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+            }
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            customCursor.style.left = `${e.clientX}px`;
+            customCursor.style.top = `${e.clientY}px`;
+        });
+
+        const interactiveElements = document.querySelectorAll('.interactive');
+
+        interactiveElements.forEach(elem => {
+            elem.addEventListener('mouseenter', () => {
+                customCursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                customCursor.style.backgroundColor = '#ff6600';
+                customCursor.style.border = '2px solid #ff6600';
+            });
+
+            elem.addEventListener('mouseleave', () => {
+                customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                customCursor.style.backgroundColor = root.style.getPropertyValue('--cursor-color') || 'rgba(0, 204, 255, 0.7)';
+                customCursor.style.border = `2px solid var(--primary-color)`;
+            });
+        });
+
+        const allElements = document.querySelectorAll('*');
+        allElements.forEach(elem => {
+            elem.style.cursor = 'none';
+        });
+
+        musicControl.addEventListener('click', () => {
+            isMusicMuted = !isMusicMuted;
+            backgroundMusic.muted = isMusicMuted;
+            localStorage.setItem('isMusicMuted', isMusicMuted); // Guardar estado de la música
+            updateMusicIcon();
+            changePalette(); // Cambiar paleta al controlar la música
+        });
+
+        function updateMusicIcon() {
+            if (isMusicMuted) {
+                musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/mute.png";
+            } else {
+                musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/speaker.png";
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if ('Notification' in window) {
+                if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+                    Notification.requestPermission();
+                }
+            }
+        });
+
+        document.addEventListener('click', () => {
+            if (backgroundMusic.paused && !isMusicMuted && isRunning) {
+                backgroundMusic.play().then(() => {
+                    musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/speaker.png";
+                }).catch(error => {
+                    console.log('No se pudo iniciar la música tras la interacción del usuario.');
+                });
+            }
+        }, { once: true });
+
+        function clearTimerState() {
+            localStorage.removeItem('timerState');
+            endTime = null;
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
