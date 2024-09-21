@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7355949070017075"
-     crossorigin="anonymous"></script>
     <meta charset="UTF-8">
-    <title>Timer</title>
+    <!-- Meta etiqueta de viewport para responsividad -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -16,24 +16,29 @@
             --glare-color: rgba(0, 204, 255, 0.5);
             --cursor-color: rgba(0, 204, 255, 0.7);
             --button-text-color: #ffffff;
+            --font-family: 'Press Start 2P', cursive;
+            --transition-speed: 0.3s;
         }
 
-        * {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Press Start 2P', cursive;
-            transition: all 0.3s ease;
+            font-family: var(--font-family);
+            transition: all var(--transition-speed) ease;
         }
 
         body {
-            background: radial-gradient(circle at center, var(--background-gradient-from), var(--background-gradient-to)), url('https://www.transparenttextures.com/patterns/dark-mosaic.png');
+            background: radial-gradient(circle at center, var(--background-gradient-from), var(--background-gradient-to)),
+                        url('https://www.transparenttextures.com/patterns/dark-mosaic.png');
+            background-size: cover;
+            background-position: center;
             color: var(--primary-color);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            overflow: hidden; /* Mantener oculto el scroll global */
+            min-height: 100vh;
+            overflow: hidden;
             position: relative;
             cursor: none;
             animation: backgroundPulse 20s infinite alternate;
@@ -48,19 +53,72 @@
             background: rgba(0, 0, 0, 0.95);
             border: 2px solid var(--primary-color);
             border-radius: 8px;
-            padding: 1vh; /* Reducido de 1vh a 0.5vh */
+            padding: 1rem;
+            width: 90%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 1s ease-out;
+            box-shadow: 0 0 4px var(--primary-color);
+            background-image: url('https://www.transparenttextures.com/patterns/small-dots.png');
+            background-size: cover;
+            transition: border-color 0.5s, box-shadow 0.5s, background 0.5s;
+            max-height: 95vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Sección Fija */
+        .fixed-header {
             width: 100%;
-            max-width: 40%; /* Ajuste para mejor responsividad */
+            padding: 1rem 0;
+            z-index: 10;
             display: flex;
             flex-direction: column;
             align-items: center;
-            animation: slideIn 1s ease-out;
             position: relative;
-            box-shadow: 0 0 4px var(--primary-color);
-            background-image: url('https://www.transparenttextures.com/patterns/small-dots.png');
-            transition: border-color 0.5s ease, box-shadow 0.5s ease, background 0.5s ease;
-            max-height: 100vh; /* Aumentado para mejor uso del espacio */
-            overflow: hidden;
+        }
+
+        /* Botón de Música Integrado en la Sección Fija */
+        .music-control {
+            position: absolute;
+            top: 20px; /* Ajustado para igual separación */
+            right: 20px; /* Ajustado para igual separación */
+            background: linear-gradient(var(--button-gradient-angle), var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 50%;
+            width: 25px; /* Reducido tamaño */
+            height: 25px; /* Reducido tamaño */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.5s, transform 0.3s, border-color 0.5s, box-shadow 0.5s;
+            box-shadow: 0 0 2px var(--primary-color), 0 0 5px var(--primary-color);
+        }
+
+        .music-control:hover {
+            background: linear-gradient(var(--button-gradient-angle), var(--secondary-color), var(--primary-color));
+            transform: scale(1.1);
+            box-shadow: 0 0 3px var(--secondary-color), 0 0 6px var(--secondary-color);
+        }
+
+        .music-control img {
+            width: 14px; /* Reducido tamaño */
+            height: 14px; /* Reducido tamaño */
+            filter: brightness(0) invert(1);
+            transition: transform 0.3s;
+        }
+
+        /* Sección Desplazable */
+        .scrollable-content {
+            width: 100%;
+            overflow-y: auto;
+            flex: 1;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.85);
+            transition: box-shadow 0.5s;
+            margin-top: 0rem;
         }
 
         @keyframes slideIn {
@@ -68,14 +126,18 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .header {
-            white-space: pre;
-            color: var(--primary-color);
+        .header, h2, .timer-display, .session-counter, .task-section h3, .footer, .session-indicator {
             text-align: center;
-            margin-bottom: 0.1rem; /* Reducido de 0.8rem a 0.4rem */
-            margin-top: 0.1rem; /* Añadido margen superior */
+            color: var(--primary-color);
             text-shadow: 0 0 2px var(--glare-color), 0 0 5px var(--glare-color);
             animation: glowText 2s infinite alternate;
+        }
+
+        .session-indicator {
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            color: var(--secondary-color);
+            text-shadow: 0 0 2px var(--glare-color), 0 0 5px var(--glare-color);
         }
 
         @keyframes glowText {
@@ -84,11 +146,9 @@
         }
 
         h2 {
-            margin-bottom: 0.6rem;
-            font-size: 1rem;
-            text-align: center;
+            font-size: 1.2rem;
+            margin: 0.6rem 0;
             color: var(--secondary-color);
-            text-shadow: 0 0 1px var(--glare-color), 0 0 3px var(--glare-color);
             animation: flicker 3s infinite;
         }
 
@@ -97,53 +157,63 @@
             50% { opacity: 0.7; }
         }
 
-        label {
-            align-self: flex-start;
-            margin-bottom: 0.2rem;
-            font-size: 0.6rem;
+        label, .task-section h3 {
+            font-size: 0.8rem;
             color: var(--primary-color);
             text-shadow: 0.5px 0.5px 1px #000;
         }
 
-        select, input[type="number"] {
+        /* Comentado para evitar conflictos con las nuevas clases */
+        /* 
+        .add-task input {
+            flex: 1;
+            padding: 0.5rem; 
+        }
+        */
+
+        select, input[type="number"], .add-task input {
             width: 100%;
-            padding: 0.3rem;
+            padding: 0.5rem;
             margin-bottom: 0.8rem;
             border: 2px solid var(--primary-color);
             border-radius: 4px;
             background: #1e1e1e;
             color: #ffffff;
-            font-size: 0.6rem;
+            font-size: 0.8rem;
             appearance: none;
             cursor: pointer;
             box-shadow: inset 0 0 2px var(--primary-color);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease, font-size 0.3s ease;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
-        /* Eliminado el pointer-events para que los inputs sean siempre interactivos */
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { 
-            -webkit-appearance: none; 
-            margin: 0; 
+        select::-ms-expand {
+            display: none;
         }
 
-        input[type=number] {
+        select {
+            background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="5"><polygon points="0,0 10,0 5,5" fill="%23ffffff"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 10px 5px;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
             -moz-appearance: textfield;
-            /* Eliminado: pointer-events: none; */
         }
 
-        input[type="number"]:focus {
+        input[type="number"]:focus, select:focus, .add-task input:focus {
             border-color: var(--secondary-color);
             box-shadow: inset 0 0 3px var(--secondary-color);
             outline: none;
         }
 
-        select:hover, select:focus, input[type="number"]:hover, input[type="number"]:focus {
-            border-color: var(--secondary-color);
-            box-shadow: inset 0 0 3px var(--secondary-color);
-        }
-
-        .controls {
+        .controls, .additional-controls {
             display: flex;
             gap: 0.6rem;
             margin-top: 0.8rem;
@@ -152,49 +222,54 @@
             width: 100%;
         }
 
-        button.control-btn {
-            padding: 0.4rem 0.8rem;
+        .additional-controls {
+            margin-top: 1rem;
+        }
+
+        button.control-btn, .add-task button, button.skip-btn {
+            padding: 0.5rem 1rem;
             background: linear-gradient(var(--button-gradient-angle), var(--primary-color), var(--secondary-color));
             border: none;
             border-radius: 4px;
             color: var(--button-text-color);
-            font-size: 0.6rem;
+            font-size: 0.8rem;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.5s ease, background 0.5s ease;
+            transition: transform 0.2s, box-shadow 0.5s, background 0.5s;
             box-shadow: 0 0 2px var(--primary-color), 0 0 5px var(--primary-color);
             position: relative;
             overflow: hidden;
         }
 
-        button.control-btn::before {
+        /* Reducido el tamaño del pseudo-elemento para evitar cortar el botón */
+        button.control-btn::before, .add-task button::before, button.skip-btn::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
+            top: -25%; /* Ajustado de -50% a -25% */
+            left: -25%; /* Ajustado de -50% a -25% */
+            width: 150%; /* Reducido de 200% a 150% */
+            height: 150%; /* Reducido de 200% a 150% */
             background: rgba(255, 255, 255, 0.1);
             transform: rotate(45deg);
-            transition: all 0.5s ease;
+            transition: all 0.5s;
         }
 
-        button.control-btn:hover::before {
+        button.control-btn:hover::before, .add-task button:hover::before, button.skip-btn:hover::before {
             top: 0;
             left: 0;
         }
 
-        button.control-btn:hover {
+        button.control-btn:hover, .add-task button:hover, button.skip-btn:hover {
             transform: scale(1.05);
             box-shadow: 0 0 3px var(--secondary-color), 0 0 6px var(--secondary-color);
         }
 
-        button.control-btn:active {
+        button.control-btn:active, .add-task button:active, button.skip-btn:active {
             transform: scale(0.98);
             box-shadow: 0 0 2px var(--primary-color), 0 0 4px var(--primary-color);
         }
 
         .timer-display {
-            font-size: 2vh;
+            font-size: 2rem;
             margin-top: 1rem;
             color: var(--secondary-color);
             text-shadow: 0 0 1px var(--glare-color), 0 0 3px var(--glare-color);
@@ -203,22 +278,22 @@
 
         .progress-container {
             width: 100%;
-            height: 1.5rem; /* Aumentado el tamaño */
-            background: #333333;
+            height: 1.5rem;
+            background: rgba(51, 51, 51, 0.7);
             border-radius: 6px;
             overflow: hidden;
             margin-top: 0.8rem;
-            display: none;
+            box-shadow: inset 0 0 4px var(--primary-color);
+            transition: box-shadow 0.5s;
             position: relative;
-            box-shadow: inset 0 0 4px var(--primary-color); /* Aumentado para mejor visibilidad */
-            transition: box-shadow 0.5s ease;
         }
 
         .progress-bar {
-            height: 1.5rem; /* Aumentado el tamaño */
+            height: 100%;
             width: 0%;
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            transition: width 0.3s ease;
+            transition: width 0.3s;
+            z-index: 1;
         }
 
         .progress-percentage {
@@ -226,46 +301,51 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 0.7rem; /* Aumentado el tamaño */
+            font-size: 0.8rem;
             color: #ffffff;
             text-shadow: 0.5px 0.5px 1px #000;
+            z-index: 2;
         }
 
-        .session-counter {
-            margin-top: 0.8rem;
-            font-size: 0.6rem;
+        .session-counter, .footer {
+            font-size: 0.8rem;
             color: var(--secondary-color);
             text-shadow: 0.5px 0.5px 1px var(--glare-color), 0 0 3px var(--glare-color);
+            margin-top: 1rem;
         }
 
-        .task-section {
-            width: 100%;
-            margin-top: 0.8rem;
+        .footer {
+            color: #666666;
+            animation: floatFooter 4s infinite;
+        }
+
+        @keyframes floatFooter {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
         }
 
         .task-section h3 {
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             margin-bottom: 0.2rem;
-            color: var(--primary-color);
-            text-shadow: 0 0 1px var(--glare-color), 0 0 3px var(--glare-color);
         }
 
         .task-list {
             list-style: none;
             width: 100%;
-            height: 2.5rem; /* Tamaño fijo */
-            overflow-y: auto; /* Permitir desplazamiento interno */
             background: #1e1e1e;
-            border: 2px solid var(--primary-color);
+            border: 1px solid var(--primary-color);
             border-radius: 4px;
-            padding: 0.2rem;
-            box-shadow: inset 0 0 2px var(--primary-color);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            padding: 0.5rem;
+            box-shadow: inset 0 0 4px var(--primary-color);
+            transition: border-color 0.3s, box-shadow 0.3s;
             cursor: pointer;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
         }
 
+        /* Scrollbars estilizados */
         .task-list::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
         }
 
         .task-list::-webkit-scrollbar-track {
@@ -274,18 +354,32 @@
 
         .task-list::-webkit-scrollbar-thumb {
             background-color: var(--primary-color);
-            border-radius: 3px;
+            border-radius: 4px;
+        }
+
+        /* Scrollbars globales */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--background-gradient-from);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 4px;
         }
 
         .task-list li {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.2rem;
+            padding: 0.5rem;
             border-bottom: 1px solid #333;
             color: #ffffff;
-            font-size: 0.5rem;
-            cursor: pointer;
+            font-size: 0.8rem;
         }
 
         .task-list li:last-child {
@@ -294,6 +388,7 @@
 
         .task-list li.completed {
             text-decoration: line-through;
+            text-decoration-thickness: 2px;
             color: var(--secondary-color);
         }
 
@@ -302,112 +397,20 @@
             border: none;
             color: var(--button-text-color);
             cursor: pointer;
-            font-size: 0.6rem;
-            margin-left: 0.2rem;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
         }
 
-        .task-list button.complete-btn:hover {
-            color: #66ff66;
-        }
-
-        .task-list button.delete-btn:hover {
-            color: #ff6666;
-        }
-
-        .add-task {
-            display: flex;
-            gap: 0.2rem;
-            margin-top: 0.2rem;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-
-        .add-task input {
-            flex: 1;
-            border: 2px solid var(--primary-color);
-            border-radius: 4px;
-            background: #1e1e1e;
-            color: #ffffff;
-            padding: 0.3rem;
-            font-size: 0.6rem;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            cursor: text; /* Indicador de que es editable */
-        }
-
-        .add-task input:focus {
-            border-color: var(--secondary-color);
-            box-shadow: inset 0 0 3px var(--secondary-color);
-            outline: none;
-        }
-
-        .add-task button {
-            padding: 0.3rem 0.6rem;
-            background: linear-gradient(var(--button-gradient-angle), var(--primary-color), var(--secondary-color));
-            border: none;
-            border-radius: 4px;
-            color: var(--button-text-color);
-            font-size: 0.6rem;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.5s ease, background 0.5s ease;
-            box-shadow: 0 0 2px var(--primary-color), 0 0 5px var(--primary-color);
-        }
-
-        .add-task button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 3px var(--secondary-color), 0 0 6px var(--secondary-color);
-        }
-
-        .footer {
-            margin-top: 0.8rem;
-            font-size: 0.5rem;
-            color: #666666;
-            text-align: center;
-            text-shadow: 0.5px 0.5px 1px #000;
-            animation: floatFooter 4s ease-in-out infinite;
-        }
-
-        @keyframes floatFooter {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-2px); }
-        }
-
-        .music-control {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid var(--primary-color);
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: background 0.5s ease, transform 0.3s ease, border-color 0.5s ease, box-shadow 0.5s ease;
-            box-shadow: 0 0 2px var(--primary-color), 0 0 5px var(--primary-color);
-        }
-
-        .music-control:hover {
-            background: rgba(0, 0, 0, 0.9);
-            transform: scale(1.1);
-            box-shadow: 0 0 3px var(--secondary-color), 0 0 6px var(--secondary-color);
-            border-color: var(--secondary-color);
-        }
-
-        .music-control img {
-            width: 10px;
-            height: 10px;
-            filter: brightness(0) invert(1);
-            transition: transform 0.3s ease;
+        .task-list button:hover {
+            color: var(--secondary-color);
         }
 
         #customCursor {
             position: fixed;
             top: 0;
             left: 0;
-            width: 6px;
-            height: 6px;
+            width: 12px;
+            height: 12px;
             background-color: var(--cursor-color);
             border: 2px solid var(--primary-color);
             border-radius: 50%;
@@ -415,7 +418,7 @@
             transform: translate(-50%, -50%);
             animation: pulse 2s infinite;
             z-index: 1000;
-            transition: transform 0.2s ease, background-color 0.5s ease, border-color 0.5s ease;
+            transition: transform 0.2s, background-color 0.5s, border-color 0.5s;
         }
 
         @keyframes pulse {
@@ -424,177 +427,549 @@
             100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
 
-        @media (max-width: 768px) {
-            .pomodoro-container {
-                padding: 1rem;
-                max-width: 90%;
-            }
-
-            .header {
-                font-size: 0.4rem;
-            }
-
-            h2 {
-                font-size: 0.8rem;
-            }
-
-            .controls button.control-btn {
-                font-size: 0.5rem;
-                padding: 0.3rem 0.6rem;
-            }
-
-            .timer-display {
-                font-size: 1.8rem;
-            }
-
-            .music-control {
-                width: 15px;
-                height: 15px;
-            }
-
-            .music-control img {
-                width: 8px;
-                height: 8px;
-            }
-
-            #customCursor {
-                width: 8px;
-                height: 8px;
-            }
-
-            .task-section h3 {
-                font-size: 0.6rem;
-            }
-
-            .task-list li {
-                font-size: 0.3rem;
-            }
-
-            .add-task button {
-                padding: 0.1rem 0.3rem;
-                font-size: 0.4rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .pomodoro-container {
-                padding: 0.6rem;
-                max-width: 85%;
-            }
-
-            .header {
-                font-size: 0.3rem;
-            }
-
-            h2 {
-                font-size: 0.6rem;
-            }
-
-            .controls button.control-btn {
-                font-size: 0.4rem;
-                padding: 0.2rem 0.5rem;
-            }
-
-            .timer-display {
-                font-size: 1.5rem;
-            }
-
-            .music-control {
-                width: 15px;
-                height: 15px;
-            }
-
-            .music-control img {
-                width: 8px;
-                height: 8px;
-            }
-
-            #customCursor {
-                width: 6px;
-                height: 6px;
-            }
-
-            .task-section h3 {
-                font-size: 0.5rem;
-            }
-
-            .task-list li {
-                font-size: 0.3rem;
-            }
-
-            .add-task button {
-                padding: 0.1rem 0.3rem;
-                font-size: 0.4rem;
-            }
-        }
-
         .interactive:hover #customCursor,
         .interactive:focus #customCursor {
             transform: translate(-50%, -50%) scale(1.5);
             background-color: #ff6600;
             border: 2px solid #ff6600;
         }
+
+        /* Media Queries Mejoradas para Pantallas Grandes */
+        @media (min-width: 1024px) {
+            .pomodoro-container {
+                padding: 1rem;
+                max-width: 600px;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            label, .task-section h3 {
+                font-size: 0.9rem;
+            }
+
+            select, input[type="number"], .add-task input {
+                font-size: 0.9rem;
+                padding: 0.6rem;
+            }
+
+            button.control-btn, .add-task button, button.skip-btn {
+                font-size: 0.9rem;
+                padding: 0.6rem 1.2rem;
+            }
+
+            .timer-display {
+                font-size: 2.5rem;
+            }
+
+            .progress-container {
+                height: 2rem;
+            }
+
+            .progress-percentage {
+                font-size: 1rem;
+            }
+
+            .session-counter, .footer {
+                font-size: 1rem;
+            }
+
+            .task-list li {
+                font-size: 0.9rem;
+            }
+
+            .music-control {
+                width: 25px; /* Ajustado para mantener el tamaño reducido */
+                height: 25px; /* Ajustado para mantener el tamaño reducido */
+            }
+
+            .music-control img {
+                width: 14px; /* Ajustado para mantener el tamaño reducido */
+                height: 14px; /* Ajustado para mantener el tamaño reducido */
+            }
+
+            #customCursor {
+                width: 14px;
+                height: 14px;
+            }
+        }
+
+        /* Media Queries Mejoradas para Pantallas Medianas */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .pomodoro-container {
+                padding: 1rem;
+                max-width: 550px;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+
+            label, .task-section h3 {
+                font-size: 0.85rem;
+            }
+
+            select, input[type="number"], .add-task input {
+                font-size: 0.85rem;
+                padding: 0.5rem;
+            }
+
+            button.control-btn, .add-task button, button.skip-btn {
+                font-size: 0.85rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .timer-display {
+                font-size: 2.2rem;
+            }
+
+            .progress-container {
+                height: 1.8rem;
+            }
+
+            .progress-percentage {
+                font-size: 0.9rem;
+            }
+
+            .session-counter, .footer {
+                font-size: 0.9rem;
+            }
+
+            .task-list li {
+                font-size: 0.85rem;
+            }
+
+            .music-control {
+                width: 25px; /* Mantiene el tamaño reducido */
+                height: 25px; /* Mantiene el tamaño reducido */
+            }
+
+            .music-control img {
+                width: 14px; /* Mantiene el tamaño reducido */
+                height: 14px; /* Mantiene el tamaño reducido */
+            }
+
+            #customCursor {
+                width: 12px;
+                height: 12px;
+            }
+        }
+
+        /* Media Queries para Pantallas Pequeñas y Móviles */
+        @media (max-width: 767px) {
+            .pomodoro-container {
+                padding: 1rem;
+                max-width: 90%;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            label, .task-section h3 {
+                font-size: 0.8rem;
+            }
+
+            select, input[type="number"], .add-task input {
+                font-size: 0.8rem;
+                padding: 0.5rem;
+            }
+
+            button.control-btn, .add-task button, button.skip-btn {
+                font-size: 0.8rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .timer-display {
+                font-size: 2rem;
+            }
+
+            .progress-container {
+                height: 1.5rem;
+            }
+
+            .progress-percentage {
+                font-size: 0.8rem;
+            }
+
+            .session-counter, .footer {
+                font-size: 0.8rem;
+            }
+
+            .task-list li {
+                font-size: 0.8rem;
+            }
+
+            .music-control {
+                width: 25px; /* Mantiene el tamaño reducido */
+                height: 25px; /* Mantiene el tamaño reducido */
+            }
+
+            .music-control img {
+                width: 14px; /* Mantiene el tamaño reducido */
+                height: 14px; /* Mantiene el tamaño reducido */
+            }
+
+            #customCursor {
+                width: 10px;
+                height: 10px;
+            }
+        }
+
+        /* Ocultar el cursor personalizado en dispositivos táctiles */
+        @media (hover: none) and (pointer: coarse) {
+            #customCursor {
+                display: none;
+            }
+        }
+
+        /* Estilos para la sección desplegable (Acordeón) */
+        .dropdown {
+            width: 100%;
+            margin-top: 0.5rem; /* Reducido de 1rem a 0.5rem */
+            margin-bottom: 1rem; /* Reducido de 1.5rem a 1rem */
+        }
+
+        .dropdown button {
+            width: 100%;
+            padding: 0.5rem;
+            background: linear-gradient(var(--button-gradient-angle), var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 4px;
+            color: var(--button-text-color);
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-align: left;
+            position: relative;
+            transition: background 0.3s;
+            box-shadow: 0 0 2px var(--primary-color), 0 0 5px var(--primary-color);
+        }
+
+        .dropdown button::after {
+            content: '\25BC'; /* Triángulo hacia abajo */
+            position: absolute;
+            right: 1rem;
+            transition: transform 0.3s;
+        }
+
+        .dropdown button.active::after {
+            transform: rotate(180deg); /* Triángulo hacia arriba */
+        }
+
+        .dropdown-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            width: 100%;
+        }
+
+        .dropdown-content.open {
+            max-height: 500px; /* Valor suficientemente grande para mostrar el contenido */
+        }
+
+        /* Ajustes dentro de la sección desplegable */
+        .dropdown-content .task-section {
+            padding: 0.5rem 0;
+        }
+
+        /* Espaciado adicional entre secciones */
+        .fixed-header > *:not(.header):not(h2):not(.timer-display):not(.session-counter):not(.footer):not(.session-indicator) {
+            margin-top: 1rem; /* Reducido de 1rem a 0.5rem */
+        }
+
+        /* Botones personalizados en la sección desplegable */
+        .dropdown-content .task-section .control-btn::before {
+            content: '';
+            position: absolute;
+            top: -25%;
+            left: -25%;
+            width: 200%; /* Increased to cover wider buttons */
+            height: 200%; /* Increased to cover wider buttons */
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+
+        /* Checkbox Container */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem; /* Reducido de 1rem a 0.5rem */
+        }
+
+        /* Ocultar la checkbox original */
+        .auto-start-checkbox {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        /* Crear un nuevo estilo para la checkbox */
+        .checkbox-container label {
+            position: relative;
+            padding-left: 25px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            user-select: none;
+            color: var(--primary-color);
+        }
+
+        /* Estilo de la checkbox personalizada */
+        .checkbox-container label::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 18px;
+            width: 18px;
+            background-color: #1e1e1e;
+            border: 2px solid var(--primary-color);
+            border-radius: 4px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        /* Estilo cuando la checkbox está marcada */
+        .auto-start-checkbox:checked + label::before {
+            background-color: var(--primary-color);
+            border-color: var(--secondary-color);
+        }
+
+        /* Añadir un checkmark cuando está marcada */
+        .checkbox-container label::after {
+            content: "";
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
+            width: 5px;
+            height: 10px;
+            border: solid #ffffff;
+            border-width: 0 2px 2px 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .auto-start-checkbox:checked + label::after {
+            opacity: 1;
+        }
+
+        /* Ajustar la sección de añadir tareas para usar Flexbox */
+        .task-section .add-task {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem; /* Espacio entre el input y el botón */
+            margin-top: 0.5rem; /* Ajuste opcional para el margen superior */
+        }
+
+        /* Hacer que el input ocupe el espacio disponible */
+        .task-section .add-task input {
+            flex: 1;
+            padding: 0.5rem; /* Asegura un buen tamaño de entrada */
+        }
+
+        /* Ajustar el botón "Añadir" para que no sea demasiado grande */
+        .task-section .add-task button {
+            margin-top: -0.8rem; /* Ajuste opcional para el margen superior */
+            flex: 0 0 auto;
+            padding: 0.5rem 1rem; /* Asegura que el botón tenga un tamaño adecuado */
+        }
+
+        /* Scrollbars estilizados para la barra de tareas */
+        .task-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .task-list::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+
+        .task-list::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        /* Scrollbars globales */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--background-gradient-from);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        /* Estilos específicos para los inputs del menú desplegable */
+        .duration-input {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 0.8rem; /* Espaciado entre cada input */
+        }
+
+        .duration-input label {
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+        }
+
+        .duration-input input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 4px;
+            background: #1e1e1e;
+            color: #ffffff;
+            font-size: 0.9rem;
+            box-shadow: inset 0 0 2px var(--primary-color);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .duration-input input:focus {
+            border-color: var(--secondary-color);
+            box-shadow: inset 0 0 3px var(--secondary-color);
+            outline: none;
+        }
+
+        /* Ajustes para pantallas grandes */
+        @media (min-width: 1024px) {
+            .duration-input input {
+                font-size: 1rem;
+                padding: 0.6rem;
+            }
+
+            .duration-input label {
+                font-size: 1rem;
+            }
+        }
+
+        /* Ajustes para pantallas medianas */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .duration-input input {
+                font-size: 0.9rem;
+                padding: 0.5rem;
+            }
+
+            .duration-input label {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Ajustes para pantallas pequeñas y móviles */
+        @media (max-width: 767px) {
+            .duration-input input {
+                font-size: 0.8rem;
+                padding: 0.5rem;
+            }
+
+            .duration-input label {
+                font-size: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="customCursor"></div>
     <div class="pomodoro-container">
+        <!-- Botón de Música (Mute/Unmute) -->
         <div class="music-control interactive" id="musicControl">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/mute.png" alt="Mute/Unmute" id="musicIcon">
-</div>
-<div class="header">
-<pre style="font-family: 'Courier New', monospace; white-space: pre; line-height: 1; font-size: 10px;">
+        </div>
+
+        <!-- Sección Fija -->
+        <div class="fixed-header">
+            <!-- Logo -->
+            <div class="header">
+                <pre style="font-family: 'Courier New', monospace; white-space: pre; line-height: 1; font-size: 10px;">
 ██████╗  ██████╗ ███╗   ███╗ ██████╗ ██████╗  ██████╗ ██████╗  ██████╗
 ██╔══██╗██╔═══██╗████╗ ████║██╔═══██╗██╔══██╗██╔═══██╗██╔══██╗██╔═══██╗
 ██████╔╝██║   ██║██╔████╔██║██║   ██║██║  ██║██║   ██║██████╔╝██║   ██║
 ██╔═══╝ ██║   ██║██║╚██╔╝██║██║   ██║██║  ██║██║   ██║██╔══██╗██║   ██║
 ██║     ╚██████╔╝██║ ╚═╝ ██║╚██████╔╝██████╔╝╚██████╔╝██║  ██║╚██████╔╝
 ╚═╝      ╚═════╝ ╚═╝     ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝
-</pre>
-</div>
-<h2>Timer</h2>
-        <label for="sessionType">Tipo de Sesión:</label>
-        <select id="sessionType" class="interactive">
-            <option value="work">Trabajo</option>
-            <option value="shortBreak">Descanso Corto</option>
-            <option value="longBreak">Descanso Largo</option>
-        </select>
-        <div class="task-section">
-            <h3>Personalizar Duraciones:</h3>
-            <div class="add-task">
-                <label for="workDuration">Trabajo:</label>
-                <input type="number" id="workDuration" min="1" value="25" class="interactive">
+                </pre>
             </div>
-            <div class="add-task">
-                <label for="shortBreakDuration">Descanso Corto:</label>
-                <input type="number" id="shortBreakDuration" min="1" value="5" class="interactive">
+
+            <!-- Timer Display -->
+            <div class="timer-display" id="timerDisplay">25:00</div>
+
+            <!-- Indicador de Tipo de Sesión -->
+            <div class="session-indicator" id="sessionIndicator">Tipo de Sesión: Trabajo</div>
+
+            <!-- Barra de Progreso Siempre Visible -->
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+                <div class="progress-percentage" id="progressPercentage">0%</div>
             </div>
-            <div class="add-task">
-                <label for="longBreakDuration">Descanso Largo:</label>
-                <input type="number" id="longBreakDuration" min="1" value="15" class="interactive">
+
+            <!-- Contador de Sesiones Completadas -->
+            <div class="session-counter" id="sessionCounter">Sesiones completadas: 0</div>
+
+            <!-- Botones de Control (Iniciar, Saltar, Reiniciar) -->
+            <div class="controls">
+                <button class="control-btn interactive" id="startPauseBtn">Iniciar</button>
+                <button class="control-btn interactive" id="skipBtn">Saltar</button>
+                <button class="control-btn interactive" id="resetBtn">Reiniciar</button>
             </div>
-            <button class="control-btn interactive" id="saveDurationsBtn">Guardar</button>
-        </div>
-        <div class="timer-display" id="timerDisplay">25:00</div>
-        <div class="controls">
-            <button class="control-btn interactive" id="startPauseBtn">Iniciar</button>
-            <button class="control-btn interactive" id="resetBtn">Reiniciar</button>
-        </div>
-        <div class="progress-container" id="progressContainer">
-            <div class="progress-bar" id="progressBar"></div>
-            <div class="progress-percentage" id="progressPercentage">0%</div>
-        </div>
-        <div class="session-counter" id="sessionCounter">Sesiones completadas: 0</div>
-        <div class="task-section">
-            <h3>Lista de Tareas:</h3>
-            <ul class="task-list interactive" id="taskList"></ul>
-            <div class="add-task">
-                <input type="text" id="newTaskInput" placeholder="Nueva tarea..." class="interactive">
-                <button class="control-btn interactive" id="addTaskBtn">Añadir</button>
+
+            <!-- Checkbox para Auto Iniciar la Siguiente Sesión -->
+            <div class="checkbox-container">
+                <input type="checkbox" id="autoStartCheckbox" class="auto-start-checkbox">
+                <label for="autoStartCheckbox">Auto Iniciar Siguiente Sesión</label>
             </div>
         </div>
-        <div class="footer">2000© no rights reserved</div>
+
+        <!-- Sección Desplazable -->
+        <div class="scrollable-content">
+            <!-- Sección Desplegable para Personalizar Duraciones -->
+            <div class="dropdown">
+                <button id="toggleDurationsBtn">Personalizar Duraciones</button>
+                <div class="dropdown-content" id="dropdownContent">
+                    <div class="task-section">
+                        <div class="duration-input">
+                            <label for="workDuration">Trabajo (minutos):</label>
+                            <input type="number" id="workDuration" min="1" value="25" class="interactive">
+                        </div>
+                        <div class="duration-input">
+                            <label for="shortBreakDuration">Descanso Corto (minutos):</label>
+                            <input type="number" id="shortBreakDuration" min="1" value="5" class="interactive">
+                        </div>
+                        <div class="duration-input">
+                            <label for="longBreakDuration">Descanso Largo (minutos):</label>
+                            <input type="number" id="longBreakDuration" min="1" value="15" class="interactive">
+                        </div>
+                        <div class="duration-input">
+                            <label for="shortBreaksBeforeLongBreak">Descansos Cortos:</label>
+                            <input type="number" id="shortBreaksBeforeLongBreak" min="1" value="4" class="interactive">
+                        </div>
+                        <button class="control-btn interactive" id="saveDurationsBtn">Guardar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Tareas -->
+            <div class="task-section">
+                <h3>Lista de Tareas:</h3>
+                <ul class="task-list interactive" id="taskList"></ul>
+                <div class="add-task">
+                    <input type="text" id="newTaskInput" placeholder="Nueva tarea..." class="interactive">
+                    <button class="control-btn interactive" id="addTaskBtn">Añadir</button>
+                </div>
+            </div>
+
+            <!-- Pie de Página -->
+            <div class="footer">2000© no rights reserved</div>
+        </div>
     </div>
+
+    <!-- Audio -->
     <audio id="backgroundMusic" loop>
         <source src="midi.mp3" type="audio/mpeg">
         <source src="midi.ogg" type="audio/ogg">
@@ -605,510 +980,534 @@
         <source src="notification.ogg" type="audio/ogg">
         Tu navegador no soporta la reproducción de audio.
     </audio>
+
     <script>
-        const startPauseBtn = document.getElementById('startPauseBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const sessionTypeSelect = document.getElementById('sessionType');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressBar = document.getElementById('progressBar');
-        const progressPercentage = document.getElementById('progressPercentage');
-        const timerDisplay = document.getElementById('timerDisplay');
-        const musicControl = document.getElementById('musicControl');
-        const musicIcon = document.getElementById('musicIcon');
-        const backgroundMusic = document.getElementById('backgroundMusic');
-        const sessionCounter = document.getElementById('sessionCounter');
-        const customCursor = document.getElementById('customCursor');
-        const root = document.documentElement;
-        const saveDurationsBtn = document.getElementById('saveDurationsBtn');
-        const workDurationInput = document.getElementById('workDuration');
-        const shortBreakDurationInput = document.getElementById('shortBreakDuration');
-        const longBreakDurationInput = document.getElementById('longBreakDuration');
-        const taskList = document.getElementById('taskList');
-        const addTaskBtn = document.getElementById('addTaskBtn');
-        const newTaskInput = document.getElementById('newTaskInput');
-        const notificationSound = document.getElementById('notificationSound');
+        document.addEventListener('DOMContentLoaded', () => {
+            // Caché de elementos DOM
+            const elements = {
+                startPauseBtn: document.getElementById('startPauseBtn'),
+                resetBtn: document.getElementById('resetBtn'),
+                skipBtn: document.getElementById('skipBtn'),
+                sessionIndicator: document.getElementById('sessionIndicator'),
+                progressContainer: document.getElementById('progressContainer'),
+                progressBar: document.getElementById('progressBar'),
+                progressPercentage: document.getElementById('progressPercentage'),
+                timerDisplay: document.getElementById('timerDisplay'),
+                musicControl: document.getElementById('musicControl'),
+                musicIcon: document.getElementById('musicIcon'),
+                backgroundMusic: document.getElementById('backgroundMusic'),
+                sessionCounter: document.getElementById('sessionCounter'),
+                customCursor: document.getElementById('customCursor'),
+                saveDurationsBtn: document.getElementById('saveDurationsBtn'),
+                workDurationInput: document.getElementById('workDuration'),
+                shortBreakDurationInput: document.getElementById('shortBreakDuration'),
+                longBreakDurationInput: document.getElementById('longBreakDuration'),
+                shortBreaksBeforeLongBreakInput: document.getElementById('shortBreaksBeforeLongBreak'), // Nuevo
+                taskList: document.getElementById('taskList'),
+                addTaskBtn: document.getElementById('addTaskBtn'),
+                newTaskInput: document.getElementById('newTaskInput'),
+                notificationSound: document.getElementById('notificationSound'),
+                root: document.documentElement,
+                toggleDurationsBtn: document.getElementById('toggleDurationsBtn'),
+                dropdownContent: document.getElementById('dropdownContent'),
+                autoStartCheckbox: document.getElementById('autoStartCheckbox'),
+                sessionIndicatorText: document.getElementById('sessionIndicator')
+            };
 
-        let isMusicMuted = false;
-        let timerDuration = 25 * 60;
-        let timerRemaining = timerDuration;
-        let timerInterval = null;
-        let isRunning = false;
-        let currentSession = 'work';
-        let completedSessions = 0;
-        let endTime = null; // Nueva variable para almacenar el tiempo de finalización
+            let isMusicMuted = false;
+            let timerDuration = 25 * 60;
+            let timerRemaining = timerDuration;
+            let timerInterval = null;
+            let isRunning = false;
+            let currentSession = 'work';
+            let completedWorkSessions = 0;
+            let endTime = null;
+            let shortBreaksBeforeLongBreak = parseInt(localStorage.getItem('shortBreaksBeforeLongBreak'), 10) || 4; // Nuevo
+            let shortBreaksCompleted = 0; // Nuevo
 
-        function loadData() {
-            // Cargar sesiones completadas
-            if (localStorage.getItem('completedSessions')) {
-                completedSessions = parseInt(localStorage.getItem('completedSessions'), 10);
-                sessionCounter.textContent = `Sesiones completadas: ${completedSessions}`;
+            const colorPalettes = [
+                { primary: '#00ccff', secondary: '#66ffff', gradientFrom: '#0d0d0d', gradientTo: '#121212', gradientAngle: '45deg', cursorColor: 'rgba(0, 204, 255, 0.7)' },
+                { primary: '#ff66cc', secondary: '#ff99ee', gradientFrom: '#1a0d0d', gradientTo: '#2c1212', gradientAngle: '60deg', cursorColor: 'rgba(255, 102, 204, 0.7)' },
+                { primary: '#66ff66', secondary: '#99ff99', gradientFrom: '#0d1a0d', gradientTo: '#121c12', gradientAngle: '30deg', cursorColor: 'rgba(102, 255, 102, 0.7)' },
+                { primary: '#ffcc00', secondary: '#ffe066', gradientFrom: '#1a1a0d', gradientTo: '#2c2c12', gradientAngle: '90deg', cursorColor: 'rgba(255, 204, 0, 0.7)' },
+                { primary: '#cc00ff', secondary: '#e066ff', gradientFrom: '#0d0d1a', gradientTo: '#12122c', gradientAngle: '135deg', cursorColor: 'rgba(204, 0, 255, 0.7)' }
+            ];
+
+            // Función para seleccionar una paleta aleatoria
+            function selectRandomPalette() {
+                return colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
             }
 
-            // Cargar tareas
-            if (localStorage.getItem('tasks')) {
-                const tasks = JSON.parse(localStorage.getItem('tasks'));
-                tasks.forEach(task => addTaskToDOM(task));
-            }
-
-            // Cargar duraciones personalizadas
-            loadDurations();
-
-            // Cargar estado del contador
-            if (localStorage.getItem('timerState')) {
-                const timerState = JSON.parse(localStorage.getItem('timerState'));
-                endTime = timerState.endTime;
-                currentSession = timerState.currentSession;
-                sessionTypeSelect.value = currentSession;
+            // Función para actualizar el tipo de sesión
+            function updateSessionType() {
                 timerDuration = getDurationBySession(currentSession);
-                const now = Date.now();
-                timerRemaining = Math.floor((endTime - now) / 1000);
+                timerRemaining = timerDuration;
+                elements.timerDisplay.textContent = formatTime(timerRemaining);
+                elements.progressBar.style.width = '0%';
+                elements.progressPercentage.textContent = '0%';
+                elements.sessionIndicatorText.textContent = `Tipo de Sesión: ${capitalizeFirstLetter(currentSession)}`;
+                resetMusic();
+                clearTimerState();
+            }
 
-                if (timerRemaining > 0) {
-                    timerDisplay.textContent = formatTime(timerRemaining);
-                    progressContainer.style.display = 'block';
-                    updateProgress();
-                    startTimer(false); // Iniciar el temporizador sin guardar nuevamente el estado
-                } else {
-                    handleSessionEnd();
+            // Obtener duración según el tipo de sesión
+            function getDurationBySession(session) {
+                const durations = {
+                    work: parseInt(elements.workDurationInput.value, 10),
+                    shortBreak: parseInt(elements.shortBreakDurationInput.value, 10),
+                    longBreak: parseInt(elements.longBreakDurationInput.value, 10)
+                };
+                return (durations[session] || 25) * 60;
+            }
+
+            // Formatear tiempo en mm:ss
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            }
+
+            // Iniciar el temporizador
+            function startTimer(shouldSave = true) {
+                if (isRunning) return;
+                isRunning = true;
+                elements.startPauseBtn.textContent = 'Pausar';
+
+                if (shouldSave) {
+                    endTime = Date.now() + timerRemaining * 1000;
+                    saveTimerState();
+                }
+
+                timerInterval = setInterval(() => {
+                    const now = Date.now();
+                    timerRemaining = Math.floor((endTime - now) / 1000);
+
+                    if (timerRemaining > 0) {
+                        elements.timerDisplay.textContent = formatTime(timerRemaining);
+                        updateProgress();
+                    } else {
+                        clearInterval(timerInterval);
+                        isRunning = false;
+                        elements.startPauseBtn.textContent = 'Iniciar';
+                        elements.timerDisplay.textContent = formatTime(0);
+                        elements.progressBar.style.width = '100%';
+                        elements.progressPercentage.textContent = '100%';
+                        handleSessionEnd();
+                    }
+                }, 1000);
+
+                if (currentSession === 'work') playMusic(); // Solo durante trabajo
+            }
+
+            // Pausar el temporizador
+            function pauseTimer() {
+                if (!isRunning) return;
+                isRunning = false;
+                elements.startPauseBtn.textContent = 'Iniciar';
+                clearInterval(timerInterval);
+                if (currentSession === 'work') pauseMusic(); // Solo durante trabajo
+                clearTimerState();
+                changePalette();
+            }
+
+            // Reiniciar el temporizador
+            function resetTimer() {
+                clearInterval(timerInterval);
+                isRunning = false;
+                elements.startPauseBtn.textContent = 'Iniciar';
+                timerRemaining = timerDuration;
+                elements.timerDisplay.textContent = formatTime(timerRemaining);
+                elements.progressBar.style.width = '0%';
+                elements.progressPercentage.textContent = '0%';
+                if (currentSession === 'work') pauseMusic(); // Solo durante trabajo
+                clearTimerState();
+            }
+
+            // Saltar a la siguiente sesión
+            function skipSession() {
+                if (isRunning) {
+                    clearInterval(timerInterval);
+                    isRunning = false;
+                }
+                handleSessionEnd(false); // No auto iniciar
+                elements.startPauseBtn.textContent = 'Iniciar'; // Restablecer botón
+            }
+
+            // Manejar el fin de una sesión
+            function handleSessionEnd(shouldAutoStart = true) {
+                if (currentSession === 'work') {
+                    completedWorkSessions++;
+                    elements.sessionCounter.textContent = `Sesiones completadas: ${completedWorkSessions}`;
+                    localStorage.setItem('completedWorkSessions', completedWorkSessions);
+                }
+                elements.notificationSound.play();
+                notifyUser(`¡${capitalizeFirstLetter(currentSession)} finalizada!`);
+                
+                // Determinar la siguiente sesión
+                if (currentSession === 'work') {
+                    currentSession = 'shortBreak';
+                } else if (currentSession === 'shortBreak') {
+                    shortBreaksCompleted++;
+                    if (shortBreaksCompleted >= shortBreaksBeforeLongBreak) {
+                        currentSession = 'longBreak';
+                        shortBreaksCompleted = 0; // Resetear contador
+                    } else {
+                        currentSession = 'work';
+                    }
+                } else if (currentSession === 'longBreak') {
+                    currentSession = 'work';
+                }
+                updateSessionType();
+
+                // Auto iniciar la siguiente sesión si está habilitado y shouldAutoStart es true
+                if (shouldAutoStart && elements.autoStartCheckbox.checked) {
+                    startTimer();
+                    changePalette();
                 }
             }
 
-            // Cargar estado de la música
-            if (localStorage.getItem('isMusicMuted')) {
-                isMusicMuted = JSON.parse(localStorage.getItem('isMusicMuted'));
-                backgroundMusic.muted = isMusicMuted;
-                updateMusicIcon();
+            // Capitalizar la primera letra
+            function capitalizeFirstLetter(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
             }
-        }
 
-        const colorPalettes = [
-            {
-                primary: '#00ccff',
-                secondary: '#66ffff',
-                gradientFrom: '#0d0d0d',
-                gradientTo: '#121212',
-                gradientAngle: '45deg',
-                cursorColor: 'rgba(0, 204, 255, 0.7)'
-            },
-            {
-                primary: '#ff66cc',
-                secondary: '#ff99ee',
-                gradientFrom: '#1a0d0d',
-                gradientTo: '#2c1212',
-                gradientAngle: '60deg',
-                cursorColor: 'rgba(255, 102, 204, 0.7)'
-            },
-            {
-                primary: '#66ff66',
-                secondary: '#99ff99',
-                gradientFrom: '#0d1a0d',
-                gradientTo: '#121c12',
-                gradientAngle: '30deg',
-                cursorColor: 'rgba(102, 255, 102, 0.7)'
-            },
-            {
-                primary: '#ffcc00',
-                secondary: '#ffe066',
-                gradientFrom: '#1a1a0d',
-                gradientTo: '#2c2c12',
-                gradientAngle: '90deg',
-                cursorColor: 'rgba(255, 204, 0, 0.7)'
-            },
-            {
-                primary: '#cc00ff',
-                secondary: '#e066ff',
-                gradientFrom: '#0d0d1a',
-                gradientTo: '#12122c',
-                gradientAngle: '135deg',
-                cursorColor: 'rgba(204, 0, 255, 0.7)'
+            // Notificar al usuario
+            function notifyUser(message) {
+                if (Notification.permission === 'granted') {
+                    new Notification(message);
+                } else if (Notification.permission !== 'denied') {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            new Notification(message);
+                        }
+                    });
+                }
             }
-        ];
 
-        function selectRandomPalette() {
-            const palette = colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
-            return palette;
-        }
-
-        function updateSessionType() {
-            const selectedType = sessionTypeSelect.value;
-            currentSession = selectedType;
-            timerDuration = getDurationBySession(currentSession);
-            timerRemaining = timerDuration;
-            timerDisplay.textContent = formatTime(timerRemaining);
-            progressBar.style.width = '0%';
-            progressPercentage.textContent = '0%';
-            progressContainer.style.display = 'none';
-            resetMusic();
-            clearTimerState();
-        }
-
-        function getDurationBySession(session) {
-            switch(session) {
-                case 'work':
-                    return parseInt(workDurationInput.value, 10) * 60;
-                case 'shortBreak':
-                    return parseInt(shortBreakDurationInput.value, 10) * 60;
-                case 'longBreak':
-                    return parseInt(longBreakDurationInput.value, 10) * 60;
-                default:
-                    return 25 * 60;
+            // Reiniciar la música
+            function resetMusic() {
+                elements.backgroundMusic.pause();
+                elements.backgroundMusic.currentTime = 0;
+                if (!isMusicMuted && currentSession === 'work') {
+                    elements.musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/speaker.png";
+                }
             }
-        }
 
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        }
+            // Reproducir música de fondo
+            function playMusic() {
+                if (!isMusicMuted && currentSession === 'work') {
+                    elements.backgroundMusic.play().then(() => {
+                        elements.musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/speaker.png";
+                    }).catch(() => {
+                        console.log('No se pudo reproducir la música.');
+                    });
+                }
+            }
 
-        function startTimer(shouldSave = true) {
-            if (isRunning) return;
-            isRunning = true;
-            startPauseBtn.textContent = 'Pausar';
-            progressContainer.style.display = 'block';
-            
-            if (shouldSave) {
-                endTime = Date.now() + timerRemaining * 1000;
+            // Pausar música de fondo
+            function pauseMusic() {
+                elements.backgroundMusic.pause();
+                elements.musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/mute.png";
+            }
+
+            // Cambiar paleta de colores
+            function changePalette() {
+                const palette = selectRandomPalette();
+                const props = ['--primary-color', '--secondary-color', '--background-gradient-from', '--background-gradient-to', '--button-gradient-angle', '--cursor-color'];
+                const values = [palette.primary, palette.secondary, palette.gradientFrom, palette.gradientTo, palette.gradientAngle, palette.cursorColor];
+                props.forEach((prop, index) => {
+                    elements.root.style.setProperty(prop, values[index]);
+                });
+                elements.customCursor.style.backgroundColor = palette.cursorColor;
+                elements.customCursor.style.borderColor = palette.primary;
+            }
+
+            // Actualizar barra de progreso
+            function updateProgress() {
+                const progress = ((timerDuration - timerRemaining) / timerDuration) * 100;
+                elements.progressBar.style.width = `${progress}%`;
+                elements.progressPercentage.textContent = `${Math.floor(progress)}%`;
+            }
+
+            // Guardar el estado del temporizador en localStorage
+            function saveTimerState() {
                 localStorage.setItem('timerState', JSON.stringify({
                     endTime,
-                    currentSession
+                    currentSession,
+                    completedWorkSessions,
+                    shortBreaksCompleted
                 }));
             }
 
-            timerInterval = setInterval(() => {
-                const now = Date.now();
-                timerRemaining = Math.floor((endTime - now) / 1000);
+            // Limpiar el estado del temporizador de localStorage
+            function clearTimerState() {
+                localStorage.removeItem('timerState');
+                endTime = null;
+            }
 
-                if (timerRemaining > 0) {
-                    timerDisplay.textContent = formatTime(timerRemaining);
-                    const progress = ((timerDuration - timerRemaining) / timerDuration) * 100;
-                    progressBar.style.width = `${progress}%`;
-                    progressPercentage.textContent = `${Math.floor(progress)}%`;
-                } else {
-                    clearInterval(timerInterval);
-                    isRunning = false;
-                    startPauseBtn.textContent = 'Iniciar';
-                    timerDisplay.textContent = formatTime(0);
-                    progressBar.style.width = '100%';
-                    progressPercentage.textContent = '100%';
-                    progressContainer.style.display = 'none';
-                    clearTimerState();
-                    handleSessionEnd();
+            // Guardar las duraciones personalizadas
+            function saveDurations() {
+                const work = parseInt(elements.workDurationInput.value, 10);
+                const shortBreak = parseInt(elements.shortBreakDurationInput.value, 10);
+                const longBreak = parseInt(elements.longBreakDurationInput.value, 10);
+                const shortBreaksBeforeLongBreakInput = parseInt(elements.shortBreaksBeforeLongBreakInput.value, 10); // Nuevo
+
+                if ([work, shortBreak, longBreak, shortBreaksBeforeLongBreakInput].some(d => isNaN(d) || d < 1)) {
+                    alert('Por favor, introduce duraciones válidas (minutos) para todas las sesiones y número válido de descansos cortos antes de un descanso largo.');
+                    return;
                 }
-            }, 1000);
-            playMusic();
-        }
 
-        function pauseTimer() {
-            if (!isRunning) return;
-            isRunning = false;
-            startPauseBtn.textContent = 'Iniciar';
-            clearInterval(timerInterval);
-            pauseMusic();
-            clearTimerState();
-            changePalette(); // Cambiar paleta al pausar
-        }
+                localStorage.setItem('workDuration', work);
+                localStorage.setItem('shortBreakDuration', shortBreak);
+                localStorage.setItem('longBreakDuration', longBreak);
+                localStorage.setItem('shortBreaksBeforeLongBreak', shortBreaksBeforeLongBreakInput); // Nuevo
 
-        function resetTimer() {
-            clearInterval(timerInterval);
-            isRunning = false;
-            startPauseBtn.textContent = 'Iniciar';
-            timerRemaining = timerDuration;
-            timerDisplay.textContent = formatTime(timerRemaining);
-            progressBar.style.width = '0%';
-            progressPercentage.textContent = '0%';
-            progressContainer.style.display = 'none';
-            pauseMusic();
-            clearTimerState();
-        }
+                shortBreaksBeforeLongBreak = shortBreaksBeforeLongBreakInput; // Actualizar variable
 
-        function handleSessionEnd() {
-            pauseMusic();
-            notificationSound.play();
-            if (currentSession === 'work') {
-                completedSessions++;
-                sessionCounter.textContent = `Sesiones completadas: ${completedSessions}`;
-                localStorage.setItem('completedSessions', completedSessions);
+                alert('Duraciones guardadas exitosamente.');
+                updateSessionType();
+                changePalette();
             }
-            notifyUser(`¡${capitalizeFirstLetter(currentSession)} finalizada!`);
-            if (currentSession === 'work') {
-                if (completedSessions % 4 === 0) {
-                    sessionTypeSelect.value = 'longBreak';
-                } else {
-                    sessionTypeSelect.value = 'shortBreak';
+
+            // Cargar duraciones desde localStorage
+            function loadDurations() {
+                const work = localStorage.getItem('workDuration');
+                const shortBreak = localStorage.getItem('shortBreakDuration');
+                const longBreak = localStorage.getItem('longBreakDuration');
+                const shortBreaksBeforeLongBreakStored = parseInt(localStorage.getItem('shortBreaksBeforeLongBreak'), 10); // Nuevo
+
+                if (work) elements.workDurationInput.value = work;
+                if (shortBreak) elements.shortBreakDurationInput.value = shortBreak;
+                if (longBreak) elements.longBreakDurationInput.value = longBreak;
+                if (shortBreaksBeforeLongBreakStored) {
+                    elements.shortBreaksBeforeLongBreakInput.value = shortBreaksBeforeLongBreakStored;
+                    shortBreaksBeforeLongBreak = shortBreaksBeforeLongBreakStored;
                 }
-            } else {
-                sessionTypeSelect.value = 'work';
-            }
-            updateSessionType();
-        }
 
-        function capitalizeFirstLetter(string) {
-            return string.charAt(0).toUpperCase() + string.slice(1);
-        }
-
-        function notifyUser(message) {
-            if (Notification.permission === 'granted') {
-                new Notification(message);
-            } else if (Notification.permission !== 'denied') {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        new Notification(message);
-                    }
-                });
-            }
-        }
-
-        function resetMusic() {
-            backgroundMusic.pause();
-            backgroundMusic.currentTime = 0;
-            if (!isMusicMuted) {
-                musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/speaker.png";
-            }
-        }
-
-        function playMusic() {
-            if (!isMusicMuted) {
-                backgroundMusic.play().then(() => {
-                    musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/speaker.png";
-                }).catch(error => {
-                    console.log('No se pudo reproducir la música.');
-                });
-            }
-        }
-
-        function pauseMusic() {
-            backgroundMusic.pause();
-            musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/mute.png";
-        }
-
-        function changePalette() {
-            const palette = selectRandomPalette();
-            root.style.setProperty('--primary-color', palette.primary);
-            root.style.setProperty('--secondary-color', palette.secondary);
-            root.style.setProperty('--background-gradient-from', palette.gradientFrom);
-            root.style.setProperty('--background-gradient-to', palette.gradientTo);
-            root.style.setProperty('--button-gradient-angle', palette.gradientAngle);
-            root.style.setProperty('--cursor-color', palette.cursorColor);
-            customCursor.style.backgroundColor = palette.cursorColor;
-            customCursor.style.borderColor = palette.primary;
-        }
-
-        function updateProgress() {
-            const progress = ((timerDuration - timerRemaining) / timerDuration) * 100;
-            progressBar.style.width = `${progress}%`;
-            progressPercentage.textContent = `${Math.floor(progress)}%`;
-        }
-
-        startPauseBtn.addEventListener('click', () => {
-            if (isRunning) {
-                pauseTimer();
-            } else {
-                startTimer();
-                changePalette(); // Cambiar paleta al iniciar
-            }
-        });
-
-        resetBtn.addEventListener('click', () => {
-            resetTimer();
-            changePalette(); // Cambiar paleta al reiniciar
-        });
-
-        sessionTypeSelect.addEventListener('change', () => {
-            updateSessionType();
-        });
-
-        saveDurationsBtn.addEventListener('click', () => {
-            const work = parseInt(workDurationInput.value, 10);
-            const shortBreak = parseInt(shortBreakDurationInput.value, 10);
-            const longBreak = parseInt(longBreakDurationInput.value, 10);
-
-            if (isNaN(work) || isNaN(shortBreak) || isNaN(longBreak) || work < 1 || shortBreak < 1 || longBreak < 1) {
-                alert('Por favor, introduce duraciones válidas (minutos) para todas las sesiones.');
-                return;
+                updateSessionType();
             }
 
-            localStorage.setItem('workDuration', work);
-            localStorage.setItem('shortBreakDuration', shortBreak);
-            localStorage.setItem('longBreakDuration', longBreak);
+            // Añadir tarea
+            function addTask(task = {}) {
+                const taskName = task.name || elements.newTaskInput.value.trim();
+                if (!taskName) {
+                    alert('Por favor, introduce una tarea.');
+                    return;
+                }
 
-            alert('Duraciones guardadas exitosamente.');
-            updateSessionType();
+                const li = document.createElement('li');
+                li.textContent = taskName;
+                li.dataset.id = task.id || Date.now();
+                if (task.completed) li.classList.add('completed');
 
-            changePalette(); // Cambiar paleta al guardar duraciones
-        });
+                const completeBtn = document.createElement('button');
+                completeBtn.textContent = 'DONE';
+                completeBtn.title = 'Marcar como completado';
+                completeBtn.classList.add('complete-btn');
 
-        function loadDurations() {
-            const work = localStorage.getItem('workDuration');
-            const shortBreak = localStorage.getItem('shortBreakDuration');
-            const longBreak = localStorage.getItem('longBreakDuration');
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'ERASE';
+                deleteBtn.title = 'Eliminar tarea';
+                deleteBtn.classList.add('delete-btn');
 
-            if (work) workDurationInput.value = work;
-            if (shortBreak) shortBreakDurationInput.value = shortBreak;
-            if (longBreak) longBreakDurationInput.value = longBreak;
+                li.appendChild(completeBtn);
+                li.appendChild(deleteBtn);
+                elements.taskList.appendChild(li);
 
-            updateSessionType();
-        }
-
-        function addTaskToDOM(task) {
-            const li = document.createElement('li');
-            li.textContent = task.name;
-            li.setAttribute('data-id', task.id);
-            if (task.completed) {
-                li.classList.add('completed');
+                if (!task.id) {
+                    saveTask({ id: li.dataset.id, name: taskName, completed: false });
+                    elements.newTaskInput.value = '';
+                }
             }
 
-            const completeBtn = document.createElement('button');
-            completeBtn.textContent = 'DONE';
-            completeBtn.title = 'Marcar como completado';
-            completeBtn.classList.add('complete-btn');
-            completeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                li.classList.toggle('completed');
-                task.completed = !task.completed;
-                saveTasks();
-            });
-
-            const deleteBtn = document.createElement('button');
-            deleteBtn.textContent = 'ERASE';
-            deleteBtn.title = 'Eliminar tarea';
-            deleteBtn.classList.add('delete-btn');
-            deleteBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                li.remove();
-                deleteTask(task.id);
-            });
-
-            li.appendChild(completeBtn);
-            li.appendChild(deleteBtn);
-            taskList.appendChild(li);
-        }
-
-        function addTask() {
-            const taskName = newTaskInput.value.trim();
-            if (taskName === '') {
-                alert('Por favor, introduce una tarea.');
-                return;
+            // Guardar tarea en localStorage
+            function saveTask(task) {
+                const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+                tasks.push(task);
+                localStorage.setItem('tasks', JSON.stringify(tasks));
             }
 
-            const task = {
-                id: Date.now(),
-                name: taskName,
-                completed: false
-            };
-
-            addTaskToDOM(task);
-            saveTask(task);
-            newTaskInput.value = '';
-        }
-
-        addTaskBtn.addEventListener('click', () => {
-            addTask();
-            changePalette(); // Cambiar paleta al añadir una tarea
-        });
-
-        newTaskInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                addTask();
+            // Guardar todas las tareas
+            function saveAllTasks() {
+                const tasks = Array.from(elements.taskList.children).map(li => ({
+                    id: li.dataset.id,
+                    name: li.firstChild.textContent.trim(),
+                    completed: li.classList.contains('completed')
+                }));
+                localStorage.setItem('tasks', JSON.stringify(tasks));
             }
-        });
 
-        function saveTask(task) {
-            let tasks = [];
-            if (localStorage.getItem('tasks')) {
-                tasks = JSON.parse(localStorage.getItem('tasks'));
-            }
-            tasks.push(task);
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
-
-        function saveTasks() {
-            const tasks = [];
-            const lis = taskList.querySelectorAll('li');
-            lis.forEach(li => {
-                const name = li.childNodes[0].nodeValue.trim();
-                const completed = li.classList.contains('completed');
-                const id = parseInt(li.getAttribute('data-id'), 10);
-                tasks.push({ id, name, completed });
-            });
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
-
-        function deleteTask(id) {
-            let tasks = [];
-            if (localStorage.getItem('tasks')) {
-                tasks = JSON.parse(localStorage.getItem('tasks'));
+            // Eliminar tarea
+            function deleteTask(id) {
+                let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
                 tasks = tasks.filter(task => task.id !== id);
                 localStorage.setItem('tasks', JSON.stringify(tasks));
             }
-        }
 
-        document.addEventListener('mousemove', (e) => {
-            customCursor.style.left = `${e.clientX}px`;
-            customCursor.style.top = `${e.clientY}px`;
-        });
+            // Cargar datos iniciales
+            function loadData() {
+                // Cargar sesiones completadas
+                completedWorkSessions = parseInt(localStorage.getItem('completedWorkSessions'), 10) || 0;
+                elements.sessionCounter.textContent = `Sesiones completadas: ${completedWorkSessions}`;
 
-        const interactiveElements = document.querySelectorAll('.interactive');
+                // Cargar tareas
+                const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+                tasks.forEach(addTask);
 
-        interactiveElements.forEach(elem => {
-            elem.addEventListener('mouseenter', () => {
-                customCursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                customCursor.style.backgroundColor = '#ff6600';
-                customCursor.style.border = '2px solid #ff6600';
-            });
+                // Cargar duraciones personalizadas
+                loadDurations();
 
-            elem.addEventListener('mouseleave', () => {
-                customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
-                customCursor.style.backgroundColor = root.style.getPropertyValue('--cursor-color') || 'rgba(0, 204, 255, 0.7)';
-                customCursor.style.border = `2px solid var(--primary-color)`;
-            });
-        });
+                // Cargar estado del temporizador
+                const timerState = JSON.parse(localStorage.getItem('timerState') || 'null');
+                if (timerState) {
+                    endTime = timerState.endTime;
+                    currentSession = timerState.currentSession;
+                    completedWorkSessions = timerState.completedWorkSessions || 0;
+                    shortBreaksCompleted = timerState.shortBreaksCompleted || 0; // Nuevo
+                    elements.sessionIndicatorText.textContent = `Tipo de Sesión: ${capitalizeFirstLetter(currentSession)}`;
+                    timerDuration = getDurationBySession(currentSession);
+                    const now = Date.now();
+                    timerRemaining = Math.floor((endTime - now) / 1000);
 
-        const allElements = document.querySelectorAll('*');
-        allElements.forEach(elem => {
-            elem.style.cursor = 'none';
-        });
-
-        musicControl.addEventListener('click', () => {
-            isMusicMuted = !isMusicMuted;
-            backgroundMusic.muted = isMusicMuted;
-            localStorage.setItem('isMusicMuted', isMusicMuted); // Guardar estado de la música
-            updateMusicIcon();
-            changePalette(); // Cambiar paleta al controlar la música
-        });
-
-        function updateMusicIcon() {
-            if (isMusicMuted) {
-                musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/mute.png";
-            } else {
-                musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/speaker.png";
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            if ('Notification' in window) {
-                if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-                    Notification.requestPermission();
+                    if (timerRemaining > 0) {
+                        elements.timerDisplay.textContent = formatTime(timerRemaining);
+                        elements.progressContainer.style.display = 'block';
+                        updateProgress();
+                        startTimer(false);
+                    } else {
+                        handleSessionEnd();
+                    }
                 }
-            }
-        });
 
-        document.addEventListener('click', () => {
-            if (backgroundMusic.paused && !isMusicMuted && isRunning) {
-                backgroundMusic.play().then(() => {
-                    musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/speaker.png";
-                }).catch(error => {
-                    console.log('No se pudo iniciar la música tras la interacción del usuario.');
+                // Cargar estado de la música
+                isMusicMuted = JSON.parse(localStorage.getItem('isMusicMuted')) || false;
+                elements.backgroundMusic.muted = isMusicMuted;
+                updateMusicIcon();
+
+                // Cargar el estado de auto inicio
+                const isAutoStartEnabled = JSON.parse(localStorage.getItem('isAutoStartEnabled'));
+                elements.autoStartCheckbox.checked = isAutoStartEnabled || false;
+            }
+
+            // Actualizar icono de música
+            function updateMusicIcon() {
+                elements.musicIcon.src = isMusicMuted
+                    ? "https://img.icons8.com/ios-filled/50/ffffff/mute.png"
+                    : "https://img.icons8.com/ios-filled/50/ffffff/speaker.png";
+            }
+
+            // Cambiar estado de la música
+            function toggleMusic() {
+                isMusicMuted = !isMusicMuted;
+                elements.backgroundMusic.muted = isMusicMuted;
+                localStorage.setItem('isMusicMuted', isMusicMuted);
+                updateMusicIcon();
+                if (currentSession === 'work') {
+                    if (isMusicMuted) {
+                        pauseMusic();
+                    } else {
+                        playMusic();
+                    }
+                }
+                changePalette();
+            }
+
+            // Manejar eventos de botones
+            elements.startPauseBtn.addEventListener('click', () => {
+                if (isRunning) {
+                    pauseTimer();
+                } else {
+                    startTimer();
+                    changePalette();
+                }
+            });
+
+            elements.resetBtn.addEventListener('click', () => {
+                resetTimer();
+                changePalette();
+            });
+
+            elements.skipBtn.addEventListener('click', () => {
+                skipSession();
+                changePalette();
+            });
+
+            elements.saveDurationsBtn.addEventListener('click', saveDurations);
+
+            elements.addTaskBtn.addEventListener('click', () => {
+                addTask();
+                changePalette();
+                saveAllTasks();
+            });
+
+            elements.newTaskInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addTask();
+                    changePalette();
+                    saveAllTasks();
+                }
+            });
+
+            // Delegación de eventos para botones de tareas
+            elements.taskList.addEventListener('click', (e) => {
+                const li = e.target.closest('li');
+                if (!li) return;
+                const id = li.dataset.id;
+
+                if (e.target.classList.contains('complete-btn')) {
+                    li.classList.toggle('completed');
+                    saveAllTasks();
+                }
+
+                if (e.target.classList.contains('delete-btn')) {
+                    li.remove();
+                    deleteTask(id);
+                }
+            });
+
+            // Control de música
+            elements.musicControl.addEventListener('click', toggleMusic);
+
+            // Movimiento del cursor personalizado
+            document.addEventListener('mousemove', (e) => {
+                elements.customCursor.style.left = `${e.clientX}px`;
+                elements.customCursor.style.top = `${e.clientY}px`;
+            });
+
+            // Interacción con elementos interactivos
+            document.querySelectorAll('.interactive').forEach(elem => {
+                elem.addEventListener('mouseenter', () => {
+                    elements.customCursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                    elements.customCursor.style.backgroundColor = '#ff6600';
+                    elements.customCursor.style.borderColor = '#ff6600';
                 });
+
+                elem.addEventListener('mouseleave', () => {
+                    elements.customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                    elements.customCursor.style.backgroundColor = getComputedStyle(elements.root).getPropertyValue('--cursor-color');
+                    elements.customCursor.style.borderColor = getComputedStyle(elements.root).getPropertyValue('--primary-color');
+                });
+            });
+
+            // Ocultar cursor por defecto
+            document.querySelectorAll('*').forEach(elem => {
+                elem.style.cursor = 'none';
+            });
+
+            // Solicitar permiso para notificaciones
+            if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+                Notification.requestPermission();
             }
-        }, { once: true });
 
-        function clearTimerState() {
-            localStorage.removeItem('timerState');
-            endTime = null;
-        }
+            // Inicializar datos
+            loadData();
 
-        loadData();
+            // Funcionalidad para la sección desplegable (Acordeón)
+            elements.toggleDurationsBtn.addEventListener('click', () => {
+                elements.dropdownContent.classList.toggle('open');
+                elements.toggleDurationsBtn.classList.toggle('active');
+            });
+        });
     </script>
 </body>
 </html>
