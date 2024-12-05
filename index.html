@@ -2,9 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <!-- Meta etiqueta de viewport para responsividad -->
+    <!-- Vista responsive -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pomodoro Timer</title>
+    <title>Pomodoro Mejorado</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -54,19 +54,22 @@
             border-radius: 8px;
             padding: 1rem;
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             display: flex;
             flex-direction: column;
             animation: slideIn 1s ease-out;
             box-shadow: 0 0 4px var(--primary-color);
             background-image: url('https://www.transparenttextures.com/patterns/small-dots.png');
             background-size: cover;
-            transition: border-color 0.5s, box-shadow 0.5s, background 0.5s;
             max-height: 95vh;
-            /* Removed overflow: hidden to allow .scrollable-content to scroll properly */
+            position: relative;
         }
 
-        /* Sección Fija */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .fixed-header {
             width: 100%;
             padding: 1rem 0;
@@ -77,51 +80,46 @@
             position: relative;
         }
 
-        /* Botón de Música Integrado en la Sección Fija */
-        .music-control {
+        .music-control, .focus-toggle, .stats-toggle, .theme-toggle {
             position: absolute;
-            top: 20px; 
-            right: 20px; 
+            top: 20px;
             background: linear-gradient(var(--button-gradient-angle), var(--primary-color), var(--secondary-color));
             border: none;
             border-radius: 50%;
-            width: 25px; 
-            height: 25px; 
+            width: 25px;
+            height: 25px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            transition: background 0.5s, transform 0.3s, border-color 0.5s, box-shadow 0.5s;
+            transition: background 0.5s, transform 0.3s, box-shadow 0.5s;
             box-shadow: 0 0 2px var(--primary-color), 0 0 5px var(--primary-color);
         }
 
-        .music-control:hover {
+        .music-control:hover, .focus-toggle:hover, .stats-toggle:hover, .theme-toggle:hover {
             background: linear-gradient(var(--button-gradient-angle), var(--secondary-color), var(--primary-color));
             transform: scale(1.1);
             box-shadow: 0 0 3px var(--secondary-color), 0 0 6px var(--secondary-color);
         }
 
-        .music-control img {
-            width: 14px; 
-            height: 14px; 
+        .music-control img, .focus-toggle img, .stats-toggle img, .theme-toggle img {
+            width: 14px;
+            height: 14px;
             filter: brightness(0) invert(1);
             transition: transform 0.3s;
         }
 
-        /* Sección Desplazable */
+        .music-control { right: 20px; }
+        .focus-toggle { right: 60px; }
+        .stats-toggle { right: 100px; }
+        .theme-toggle { right: 140px; }
+
         .scrollable-content {
             width: 100%;
             overflow-y: auto;
             flex: 1;
             padding: 0.5rem;
             background: rgba(0, 0, 0, 0.85);
-            transition: box-shadow 0.5s;
-            margin-top: 0rem;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .header, h2, .timer-display, .session-counter, .task-section h3, .footer, .session-indicator {
@@ -129,13 +127,6 @@
             color: var(--primary-color);
             text-shadow: 0 0 2px var(--glare-color), 0 0 5px var(--glare-color);
             animation: glowText 2s infinite alternate;
-        }
-
-        .session-indicator {
-            font-size: 1rem;
-            margin-top: 0.5rem;
-            color: var(--secondary-color);
-            text-shadow: 0 0 2px var(--glare-color), 0 0 5px var(--glare-color);
         }
 
         @keyframes glowText {
@@ -155,114 +146,17 @@
             50% { opacity: 0.7; }
         }
 
-        label, .task-section h3 {
-            font-size: 0.8rem;
-            color: var(--primary-color);
-            text-shadow: 0.5px 0.5px 1px #000;
-        }
-
-        select, input[type="number"], .add-task input {
-            width: 100%;
-            padding: 0.5rem;
-            margin-bottom: 0.8rem;
-            border: 2px solid var(--primary-color);
-            border-radius: 4px;
-            background: #1e1e1e;
-            color: #ffffff;
-            font-size: 0.8rem;
-            appearance: none;
-            cursor: pointer;
-            box-shadow: inset 0 0 2px var(--primary-color);
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        select::-ms-expand {
-            display: none;
-        }
-
-        select {
-            background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="5"><polygon points="0,0 10,0 5,5" fill="%23ffffff"/></svg>');
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 10px 5px;
-        }
-
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        input[type="number"] {
-            -moz-appearance: textfield;
-        }
-
-        input[type="number"]:focus, select:focus, .add-task input:focus {
-            border-color: var(--secondary-color);
-            box-shadow: inset 0 0 3px var(--secondary-color);
-            outline: none;
-        }
-
-        .controls, .additional-controls {
-            display: flex;
-            gap: 0.6rem;
-            margin-top: 0.8rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .additional-controls {
-            margin-top: 1rem;
-        }
-
-        button.control-btn, .add-task button, button.skip-btn {
-            padding: 0.5rem 1rem;
-            background: linear-gradient(var(--button-gradient-angle), var(--primary-color), var(--secondary-color));
-            border: none;
-            border-radius: 4px;
-            color: var(--button-text-color);
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.5s, background 0.5s;
-            box-shadow: 0 0 2px var(--primary-color), 0 0 5px var(--primary-color);
-            position: relative;
-            overflow: hidden;
-        }
-
-        button.control-btn::before, .add-task button::before, button.skip-btn::before {
-            content: '';
-            position: absolute;
-            top: -25%; 
-            left: -25%; 
-            width: 150%; 
-            height: 150%; 
-            background: rgba(255, 255, 255, 0.1);
-            transform: rotate(45deg);
-            transition: all 0.5s;
-        }
-
-        button.control-btn:hover::before, .add-task button:hover::before, button.skip-btn:hover::before {
-            top: 0;
-            left: 0;
-        }
-
-        button.control-btn:hover, .add-task button:hover, button.skip-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 3px var(--secondary-color), 0 0 6px var(--secondary-color);
-        }
-
-        button.control-btn:active, .add-task button:active, button.skip-btn:active {
-            transform: scale(0.98);
-            box-shadow: 0 0 2px var(--primary-color), 0 0 4px var(--primary-color);
-        }
-
         .timer-display {
             font-size: 2rem;
             margin-top: 1rem;
             color: var(--secondary-color);
-            text-shadow: 0 0 1px var(--glare-color), 0 0 3px var(--glare-color);
             animation: flicker 3s infinite;
+        }
+
+        .session-indicator {
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            color: var(--secondary-color);
         }
 
         .progress-container {
@@ -273,7 +167,6 @@
             overflow: hidden;
             margin-top: 0.8rem;
             box-shadow: inset 0 0 4px var(--primary-color);
-            transition: box-shadow 0.5s;
             position: relative;
         }
 
@@ -299,18 +192,11 @@
         .session-counter, .footer {
             font-size: 0.8rem;
             color: var(--secondary-color);
-            text-shadow: 0.5px 0.5px 1px var(--glare-color), 0 0 3px var(--glare-color);
             margin-top: 1rem;
         }
 
         .footer {
             color: #666666;
-            animation: floatFooter 4s infinite;
-        }
-
-        @keyframes floatFooter {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-2px); }
         }
 
         .task-section h3 {
@@ -326,8 +212,6 @@
             border-radius: 4px;
             padding: 0.5rem;
             box-shadow: inset 0 0 4px var(--primary-color);
-            transition: border-color 0.3s, box-shadow 0.3s;
-            cursor: pointer;
             margin-top: 0.5rem;
             margin-bottom: 0.5rem;
         }
@@ -387,242 +271,45 @@
             100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
 
-        /* Media Queries Mejoradas para Pantallas Grandes */
-        @media (min-width: 1024px) {
-            .pomodoro-container {
-                padding: 1rem;
-                max-width: 600px;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-            }
-
-            label, .task-section h3 {
-                font-size: 0.9rem;
-            }
-
-            select, input[type="number"], .add-task input {
-                font-size: 0.9rem;
-                padding: 0.6rem;
-            }
-
-            button.control-btn, .add-task button, button.skip-btn {
-                font-size: 0.9rem;
-                padding: 0.6rem 1.2rem;
-            }
-
-            .timer-display {
-                font-size: 2.5rem;
-            }
-
-            .progress-container {
-                height: 2rem;
-            }
-
-            .progress-percentage {
-                font-size: 1rem;
-            }
-
-            .session-counter, .footer {
-                font-size: 1rem;
-            }
-
-            .task-list li {
-                font-size: 0.9rem;
-            }
-
-            .music-control {
-                width: 25px; 
-                height: 25px;
-            }
-
-            .music-control img {
-                width: 14px; 
-                height: 14px;
-            }
-
-            #customCursor {
-                width: 14px;
-                height: 14px;
-            }
-        }
-
-        /* Media Queries Mejoradas para Pantallas Medianas */
-        @media (min-width: 768px) and (max-width: 1023px) {
-            .pomodoro-container {
-                padding: 1rem;
-                max-width: 550px;
-            }
-
-            h2 {
-                font-size: 1.3rem;
-            }
-
-            label, .task-section h3 {
-                font-size: 0.85rem;
-            }
-
-            select, input[type="number"], .add-task input {
-                font-size: 0.85rem;
-                padding: 0.5rem;
-            }
-
-            button.control-btn, .add-task button, button.skip-btn {
-                font-size: 0.85rem;
-                padding: 0.5rem 1rem;
-            }
-
-            .timer-display {
-                font-size: 2.2rem;
-            }
-
-            .progress-container {
-                height: 1.8rem;
-            }
-
-            .progress-percentage {
-                font-size: 0.9rem;
-            }
-
-            .session-counter, .footer {
-                font-size: 0.9rem;
-            }
-
-            .task-list li {
-                font-size: 0.85rem;
-            }
-
-            .music-control {
-                width: 25px;
-                height: 25px;
-            }
-
-            .music-control img {
-                width: 14px;
-                height: 14px;
-            }
-
-            #customCursor {
-                width: 12px;
-                height: 12px;
-            }
-        }
-
-        /* Media Queries para Pantallas Pequeñas y Móviles */
-        @media (max-width: 767px) {
-            .pomodoro-container {
-                padding: 1rem;
-                max-width: 90%;
-            }
-
-            h2 {
-                font-size: 1.2rem;
-            }
-
-            label, .task-section h3 {
-                font-size: 0.8rem;
-            }
-
-            select, input[type="number"], .add-task input {
-                font-size: 0.8rem;
-                padding: 0.5rem;
-            }
-
-            button.control-btn, .add-task button, button.skip-btn {
-                font-size: 0.8rem;
-                padding: 0.5rem 1rem;
-            }
-
-            .timer-display {
-                font-size: 2rem;
-            }
-
-            .progress-container {
-                height: 1.5rem;
-            }
-
-            .progress-percentage {
-                font-size: 0.8rem;
-            }
-
-            .session-counter, .footer {
-                font-size: 0.8rem;
-            }
-
-            .task-list li {
-                font-size: 0.8rem;
-            }
-
-            .music-control {
-                width: 25px;
-                height: 25px;
-            }
-
-            .music-control img {
-                width: 14px;
-                height: 14px;
-            }
-
-            #customCursor {
-                width: 10px;
-                height: 10px;
-            }
-        }
-
-        /* Ocultar el cursor personalizado en dispositivos táctiles */
-        @media (hover: none) and (pointer: coarse) {
-            #customCursor {
-                display: none;
-            }
-        }
-
-        /* Estilos para la sección desplegable (Acordeón) */
-        .dropdown {
-            width: 100%;
-            margin-top: 0.5rem; 
-            margin-bottom: 1rem;
-        }
-
-        .dropdown button {
+        select, input[type="number"], .add-task input {
             width: 100%;
             padding: 0.5rem;
+            margin-bottom: 0.8rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 4px;
+            background: #1e1e1e;
+            color: #ffffff;
+            font-size: 0.8rem;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .controls {
+            display: flex;
+            gap: 0.6rem;
+            margin-top: 0.8rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        button.control-btn, .add-task button {
+            padding: 0.5rem 1rem;
             background: linear-gradient(var(--button-gradient-angle), var(--primary-color), var(--secondary-color));
             border: none;
             border-radius: 4px;
             color: var(--button-text-color);
             font-size: 0.8rem;
             cursor: pointer;
-            text-align: left;
-            position: relative;
-            transition: background 0.3s;
+            transition: transform 0.2s, box-shadow 0.5s, background 0.5s;
             box-shadow: 0 0 2px var(--primary-color), 0 0 5px var(--primary-color);
-        }
-
-        .dropdown button::after {
-            content: '\25BC'; 
-            position: absolute;
-            right: 1rem;
-            transition: transform 0.3s;
-        }
-
-        .dropdown button.active::after {
-            transform: rotate(180deg);
-        }
-
-        .dropdown-content {
-            max-height: 0;
+            position: relative;
             overflow: hidden;
-            transition: max-height 0.3s ease;
-            width: 100%;
         }
 
-        .dropdown-content.open {
-            max-height: 500px; 
-        }
-
-        .dropdown-content .task-section {
-            padding: 0.5rem 0;
+        button.control-btn:hover, .add-task button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 3px var(--secondary-color), 0 0 6px var(--secondary-color);
         }
 
         .checkbox-container {
@@ -635,16 +322,12 @@
             position: absolute;
             opacity: 0;
             cursor: pointer;
-            height: 0;
-            width: 0;
         }
 
         .checkbox-container label {
             position: relative;
             padding-left: 25px;
-            cursor: pointer;
             font-size: 0.8rem;
-            user-select: none;
             color: var(--primary-color);
         }
 
@@ -685,642 +368,806 @@
             opacity: 1;
         }
 
-        .task-section .add-task {
+        .add-task {
             display: flex;
             align-items: center;
-            gap: 0.5rem; 
-            margin-top: 0.5rem; 
+            gap: 0.5rem;
+            margin-top: 0.5rem;
         }
 
-        .task-section .add-task input {
-            flex: 1;
-            padding: 0.5rem; 
-        }
-
-        .task-section .add-task button {
-            margin-top: -0.8rem; 
-            flex: 0 0 auto;
-            padding: 0.5rem 1rem;
-        }
-
-        .duration-input {
+        .duration-input, .audio-input, .theme-selector {
             display: flex;
             flex-direction: column;
             margin-bottom: 0.8rem;
         }
 
-        .duration-input label {
-            margin-bottom: 0.3rem;
-            font-size: 0.9rem;
-            color: var(--primary-color);
-        }
-
-        .duration-input input {
-            width: 100%;
-            padding: 0.5rem;
+        .stats-modal, .quote-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #000000dd;
             border: 2px solid var(--primary-color);
-            border-radius: 4px;
-            background: #1e1e1e;
-            color: #ffffff;
-            font-size: 0.9rem;
-            box-shadow: inset 0 0 2px var(--primary-color);
-            transition: border-color 0.3s, box-shadow 0.3s;
+            border-radius: 8px;
+            padding: 1rem;
+            z-index: 2000;
+            max-width: 300px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
 
-        .duration-input input:focus {
-            border-color: var(--secondary-color);
-            box-shadow: inset 0 0 3px var(--secondary-color);
-            outline: none;
+        .stats-modal.active, .quote-modal.active {
+            display: flex;
         }
+
+        .stats-modal h3, .quote-modal h3 {
+            font-size: 1rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-modal p, .quote-modal p {
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-modal button, .quote-modal button {
+            margin-top: 1rem;
+        }
+
+        /* Ocultar elementos en modo foco */
+        .focus-mode .scrollable-content {
+            display: none;
+        }
+
+        .focus-mode .dropdown, .focus-mode .task-section {
+            display: none;
+        }
+
     </style>
 </head>
 <body>
-    <div id="customCursor"></div>
-    <div class="pomodoro-container">
-        <!-- Botón de Música (Mute/Unmute) -->
-        <div class="music-control interactive" id="musicControl">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/mute.png" alt="Mute/Unmute" id="musicIcon">
-        </div>
+<div id="customCursor"></div>
+<div class="pomodoro-container" id="pomodoroContainer">
+    <!-- Controles Superiores -->
+    <div class="music-control interactive" id="musicControl" title="Toggle Música"></div>
+    <div class="focus-toggle interactive" id="focusToggle" title="Modo Enfoque"></div>
+    <div class="stats-toggle interactive" id="statsToggle" title="Ver Estadísticas"></div>
+    <div class="theme-toggle interactive" id="themeToggle" title="Cambiar Tema"></div>
 
-        <!-- Sección Fija -->
-        <div class="fixed-header">
-            <!-- Logo -->
-            <div class="header">
-                <pre style="font-family: 'Courier New', monospace; white-space: pre; line-height: 1; font-size: 10px;">
+    <!-- Sección Fija -->
+    <div class="fixed-header">
+        <div class="header">
+<pre style="font-family: 'Courier New', monospace; white-space: pre; line-height: 1; font-size: 10px;">
 ██████╗  ██████╗ ███╗   ███╗ ██████╗ ██████╗  ██████╗ ██████╗  ██████╗
 ██╔══██╗██╔═══██╗████╗ ████║██╔═══██╗██╔══██╗██╔═══██╗██╔══██╗██╔═══██╗
 ██████╔╝██║   ██║██╔████╔██║██║   ██║██║  ██║██║   ██║██████╔╝██║   ██║
 ██╔═══╝ ██║   ██║██║╚██╔╝██║██║   ██║██║  ██║██║   ██║██╔══██╗██║   ██║
 ██║     ╚██████╔╝██║ ╚═╝ ██║╚██████╔╝██████╔╝╚██████╔╝██║  ██║╚██████╔╝
 ╚═╝      ╚═════╝ ╚═╝     ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝
-                </pre>
-            </div>
-
-            <!-- Timer Display -->
-            <div class="timer-display" id="timerDisplay">25:00</div>
-
-            <!-- Indicador de Tipo de Sesión -->
-            <div class="session-indicator" id="sessionIndicator">Tipo de Sesión: Trabajo</div>
-
-            <!-- Barra de Progreso Siempre Visible -->
-            <div class="progress-container" id="progressContainer">
-                <div class="progress-bar" id="progressBar"></div>
-                <div class="progress-percentage" id="progressPercentage">0%</div>
-            </div>
-
-            <!-- Contador de Sesiones Completadas -->
-            <div class="session-counter" id="sessionCounter">Sesiones completadas: 0</div>
-
-            <!-- Botones de Control (Iniciar, Saltar, Reiniciar) -->
-            <div class="controls">
-                <button class="control-btn interactive" id="startPauseBtn">Iniciar</button>
-                <button class="control-btn interactive" id="skipBtn">Saltar</button>
-                <button class="control-btn interactive" id="resetBtn">Reiniciar</button>
-            </div>
-
-            <!-- Checkbox para Auto Iniciar la Siguiente Sesión -->
-            <div class="checkbox-container">
-                <input type="checkbox" id="autoStartCheckbox" class="auto-start-checkbox">
-                <label for="autoStartCheckbox">Auto Iniciar Siguiente Sesión</label>
-            </div>
+</pre>
         </div>
 
-        <!-- Sección Desplazable -->
-        <div class="scrollable-content">
-            <!-- Sección Desplegable para Personalizar Duraciones -->
-            <div class="dropdown">
-                <button id="toggleDurationsBtn">Personalizar Duraciones</button>
-                <div class="dropdown-content" id="dropdownContent">
-                    <div class="task-section">
-                        <div class="duration-input">
-                            <label for="workDuration">Trabajo (minutos):</label>
-                            <input type="number" id="workDuration" min="1" value="25" class="interactive">
-                        </div>
-                        <div class="duration-input">
-                            <label for="shortBreakDuration">Descanso Corto (minutos):</label>
-                            <input type="number" id="shortBreakDuration" min="1" value="5" class="interactive">
-                        </div>
-                        <div class="duration-input">
-                            <label for="longBreakDuration">Descanso Largo (minutos):</label>
-                            <input type="number" id="longBreakDuration" min="1" value="15" class="interactive">
-                        </div>
-                        <div class="duration-input">
-                            <label for="shortBreaksBeforeLongBreak">Descansos Cortos:</label>
-                            <input type="number" id="shortBreaksBeforeLongBreak" min="1" value="4" class="interactive">
-                        </div>
-                        <button class="control-btn interactive" id="saveDurationsBtn">Guardar</button>
-                    </div>
-                </div>
-            </div>
+        <div class="timer-display" id="timerDisplay">25:00</div>
+        <div class="session-indicator" id="sessionIndicator">Tipo de Sesión: Trabajo</div>
 
-            <!-- Lista de Tareas -->
-            <div class="task-section">
-                <h3>Lista de Tareas:</h3>
-                <ul class="task-list interactive" id="taskList"></ul>
-                <div class="add-task">
-                    <input type="text" id="newTaskInput" placeholder="Nueva tarea..." class="interactive">
-                    <button class="control-btn interactive" id="addTaskBtn">Añadir</button>
-                </div>
-            </div>
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+            <div class="progress-percentage" id="progressPercentage">0%</div>
+        </div>
 
-            <!-- Pie de Página -->
-            <div class="footer">2000© no rights reserved</div>
+        <div class="session-counter" id="sessionCounter">Sesiones completadas: 0</div>
+
+        <div class="controls">
+            <button class="control-btn interactive" id="startPauseBtn">Iniciar</button>
+            <button class="control-btn interactive" id="skipBtn">Saltar</button>
+            <button class="control-btn interactive" id="resetBtn">Reiniciar</button>
+        </div>
+
+        <div class="checkbox-container">
+            <input type="checkbox" id="autoStartCheckbox" class="auto-start-checkbox">
+            <label for="autoStartCheckbox">Auto Iniciar Siguiente Sesión</label>
         </div>
     </div>
 
-    <!-- Audio -->
-    <audio id="backgroundMusic" loop>
-        <source src="midi.mp3" type="audio/mpeg">
-        <source src="midi.ogg" type="audio/ogg">
-        Tu navegador no soporta la reproducción de audio.
-    </audio>
-    <audio id="notificationSound">
-        <source src="notification.mp3" type="audio/mpeg">
-        <source src="notification.ogg" type="audio/ogg">
-        Tu navegador no soporta la reproducción de audio.
-    </audio>
+    <!-- Sección Desplazable -->
+    <div class="scrollable-content">
+        <!-- Dropdown para Personalizar Duraciones y Audio -->
+        <div class="dropdown">
+            <button id="toggleDurationsBtn">Personalizar Opciones</button>
+            <div class="dropdown-content" id="dropdownContent">
+                <div class="task-section">
+                    <!-- Duraciones -->
+                    <div class="duration-input">
+                        <label for="workDuration">Trabajo (min):</label>
+                        <input type="number" id="workDuration" min="1" value="25" class="interactive">
+                    </div>
+                    <div class="duration-input">
+                        <label for="shortBreakDuration">Descanso Corto (min):</label>
+                        <input type="number" id="shortBreakDuration" min="1" value="5" class="interactive">
+                    </div>
+                    <div class="duration-input">
+                        <label for="longBreakDuration">Descanso Largo (min):</label>
+                        <input type="number" id="longBreakDuration" min="1" value="15" class="interactive">
+                    </div>
+                    <div class="duration-input">
+                        <label for="shortBreaksBeforeLongBreak"># Descansos Cortos Antes Largo:</label>
+                        <input type="number" id="shortBreaksBeforeLongBreak" min="1" value="4" class="interactive">
+                    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const elements = {
-                startPauseBtn: document.getElementById('startPauseBtn'),
-                resetBtn: document.getElementById('resetBtn'),
-                skipBtn: document.getElementById('skipBtn'),
-                sessionIndicatorText: document.getElementById('sessionIndicator'),
-                progressContainer: document.getElementById('progressContainer'),
-                progressBar: document.getElementById('progressBar'),
-                progressPercentage: document.getElementById('progressPercentage'),
-                timerDisplay: document.getElementById('timerDisplay'),
-                musicControl: document.getElementById('musicControl'),
-                musicIcon: document.getElementById('musicIcon'),
-                backgroundMusic: document.getElementById('backgroundMusic'),
-                sessionCounter: document.getElementById('sessionCounter'),
-                customCursor: document.getElementById('customCursor'),
-                saveDurationsBtn: document.getElementById('saveDurationsBtn'),
-                workDurationInput: document.getElementById('workDuration'),
-                shortBreakDurationInput: document.getElementById('shortBreakDuration'),
-                longBreakDurationInput: document.getElementById('longBreakDuration'),
-                shortBreaksBeforeLongBreakInput: document.getElementById('shortBreaksBeforeLongBreak'),
-                taskList: document.getElementById('taskList'),
-                addTaskBtn: document.getElementById('addTaskBtn'),
-                newTaskInput: document.getElementById('newTaskInput'),
-                notificationSound: document.getElementById('notificationSound'),
-                root: document.documentElement,
-                toggleDurationsBtn: document.getElementById('toggleDurationsBtn'),
-                dropdownContent: document.getElementById('dropdownContent'),
-                autoStartCheckbox: document.getElementById('autoStartCheckbox')
-            };
+                    <!-- Selección de Sonidos -->
+                    <div class="audio-input">
+                        <label for="notificationSoundSelect">Sonido de Notificación:</label>
+                        <select id="notificationSoundSelect" class="interactive">
+                            <option value="notification.mp3">Clásico</option>
+                            <option value="bell.mp3">Campana</option>
+                            <option value="chime.mp3">Tono Suave</option>
+                        </select>
+                    </div>
 
-            let isMusicMuted = false;
-            let timerDuration = 25 * 60;
-            let timerRemaining = timerDuration;
-            let timerInterval = null;
-            let isRunning = false;
-            let currentSession = 'work';
-            let completedWorkSessions = 0;
-            let endTime = null;
-            let shortBreaksBeforeLongBreak = parseInt(localStorage.getItem('shortBreaksBeforeLongBreak'), 10) || 4;
-            let shortBreaksCompleted = 0;
+                    <div class="audio-input">
+                        <label for="musicTrackSelect">Música de Fondo (Trabajo):</label>
+                        <select id="musicTrackSelect" class="interactive">
+                            <option value="midi.mp3">MIDI Retro</option>
+                            <option value="lofi.mp3">Lo-Fi</option>
+                            <option value="nature.mp3">Sonidos de Naturaleza</option>
+                        </select>
+                    </div>
 
-            const colorPalettes = [
-                { primary: '#00ccff', secondary: '#66ffff', gradientFrom: '#0d0d0d', gradientTo: '#121212', gradientAngle: '45deg', cursorColor: 'rgba(0, 204, 255, 0.7)' },
-                { primary: '#ff66cc', secondary: '#ff99ee', gradientFrom: '#1a0d0d', gradientTo: '#2c1212', gradientAngle: '60deg', cursorColor: 'rgba(255, 102, 204, 0.7)' },
-                { primary: '#66ff66', secondary: '#99ff99', gradientFrom: '#0d1a0d', gradientTo: '#121c12', gradientAngle: '30deg', cursorColor: 'rgba(102, 255, 102, 0.7)' },
-                { primary: '#ffcc00', secondary: '#ffe066', gradientFrom: '#1a1a0d', gradientTo: '#2c2c12', gradientAngle: '90deg', cursorColor: 'rgba(255, 204, 0, 0.7)' },
-                { primary: '#cc00ff', secondary: '#e066ff', gradientFrom: '#0d0d1a', gradientTo: '#12122c', gradientAngle: '135deg', cursorColor: 'rgba(204, 0, 255, 0.7)' }
-            ];
+                    <!-- Selección de Tema Manual -->
+                    <div class="theme-selector">
+                        <label for="manualThemeSelect">Tema:</label>
+                        <select id="manualThemeSelect" class="interactive">
+                            <option value="">Aleatorio</option>
+                            <option value="azul">Azul Neon</option>
+                            <option value="rosa">Rosa Ciber</option>
+                            <option value="verde">Verde Tech</option>
+                            <option value="amarillo">Amarillo Disco</option>
+                            <option value="morado">Morado Retro</option>
+                        </select>
+                    </div>
 
-            function selectRandomPalette() {
-                return colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
-            }
+                    <button class="control-btn interactive" id="saveDurationsBtn">Guardar</button>
+                </div>
+            </div>
+        </div>
 
-            function updateSessionType() {
-                timerDuration = getDurationBySession(currentSession);
-                timerRemaining = timerDuration;
-                elements.timerDisplay.textContent = formatTime(timerRemaining);
-                elements.progressBar.style.width = '0%';
-                elements.progressPercentage.textContent = '0%';
-                elements.sessionIndicatorText.textContent = `Tipo de Sesión: ${capitalizeFirstLetter(currentSession)}`;
-                resetMusic();
-                clearTimerState();
-            }
+        <!-- Lista de Tareas -->
+        <div class="task-section">
+            <h3>Lista de Tareas:</h3>
+            <ul class="task-list interactive" id="taskList"></ul>
+            <div class="add-task">
+                <input type="text" id="newTaskInput" placeholder="Nueva tarea..." class="interactive">
+                <button class="control-btn interactive" id="addTaskBtn">Añadir</button>
+            </div>
+        </div>
 
-            function getDurationBySession(session) {
-                const durations = {
-                    work: parseInt(elements.workDurationInput.value, 10),
-                    shortBreak: parseInt(elements.shortBreakDurationInput.value, 10),
-                    longBreak: parseInt(elements.longBreakDurationInput.value, 10)
-                };
-                return (durations[session] || 25) * 60;
-            }
+        <!-- Pie de Página -->
+        <div class="footer">2000© no rights reserved - Con mejoras</div>
+    </div>
+</div>
 
-            function formatTime(seconds) {
-                const mins = Math.floor(seconds / 60);
-                const secs = seconds % 60;
-                return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-            }
+<!-- Modales -->
+<div class="stats-modal" id="statsModal">
+    <h3>Estadísticas</h3>
+    <p id="todaySessionsCount"></p>
+    <p id="weekSessionsCount"></p>
+    <button class="control-btn" id="closeStatsBtn">Cerrar</button>
+</div>
 
-            function startTimer(shouldSave = true) {
-                if (isRunning) return;
-                isRunning = true;
-                elements.startPauseBtn.textContent = 'Pausar';
+<div class="quote-modal" id="quoteModal">
+    <h3>¡Bien Hecho!</h3>
+    <p id="quoteText"></p>
+    <button class="control-btn" id="closeQuoteBtn">Cerrar</button>
+</div>
 
-                if (shouldSave) {
-                    endTime = Date.now() + timerRemaining * 1000;
-                    saveTimerState();
-                }
+<!-- Audios -->
+<!-- El src se actualiza dinámicamente -->
+<audio id="backgroundMusic" loop></audio>
+<audio id="notificationSound"></audio>
 
-                timerInterval = setInterval(() => {
-                    const now = Date.now();
-                    timerRemaining = Math.floor((endTime - now) / 1000);
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Elementos
+    const el = {
+        startPauseBtn: document.getElementById('startPauseBtn'),
+        resetBtn: document.getElementById('resetBtn'),
+        skipBtn: document.getElementById('skipBtn'),
+        sessionIndicator: document.getElementById('sessionIndicator'),
+        progressBar: document.getElementById('progressBar'),
+        progressPercentage: document.getElementById('progressPercentage'),
+        timerDisplay: document.getElementById('timerDisplay'),
+        musicControl: document.getElementById('musicControl'),
+        backgroundMusic: document.getElementById('backgroundMusic'),
+        notificationSound: document.getElementById('notificationSound'),
+        sessionCounter: document.getElementById('sessionCounter'),
+        customCursor: document.getElementById('customCursor'),
+        saveDurationsBtn: document.getElementById('saveDurationsBtn'),
+        workDurationInput: document.getElementById('workDuration'),
+        shortBreakDurationInput: document.getElementById('shortBreakDuration'),
+        longBreakDurationInput: document.getElementById('longBreakDuration'),
+        shortBreaksBeforeLongBreakInput: document.getElementById('shortBreaksBeforeLongBreak'),
+        taskList: document.getElementById('taskList'),
+        addTaskBtn: document.getElementById('addTaskBtn'),
+        newTaskInput: document.getElementById('newTaskInput'),
+        toggleDurationsBtn: document.getElementById('toggleDurationsBtn'),
+        dropdownContent: document.getElementById('dropdownContent'),
+        autoStartCheckbox: document.getElementById('autoStartCheckbox'),
+        focusToggle: document.getElementById('focusToggle'),
+        statsToggle: document.getElementById('statsToggle'),
+        themeToggle: document.getElementById('themeToggle'),
+        pomodoroContainer: document.getElementById('pomodoroContainer'),
+        statsModal: document.getElementById('statsModal'),
+        closeStatsBtn: document.getElementById('closeStatsBtn'),
+        todaySessionsCount: document.getElementById('todaySessionsCount'),
+        weekSessionsCount: document.getElementById('weekSessionsCount'),
+        quoteModal: document.getElementById('quoteModal'),
+        closeQuoteBtn: document.getElementById('closeQuoteBtn'),
+        quoteText: document.getElementById('quoteText'),
+        notificationSoundSelect: document.getElementById('notificationSoundSelect'),
+        musicTrackSelect: document.getElementById('musicTrackSelect'),
+        manualThemeSelect: document.getElementById('manualThemeSelect')
+    };
 
-                    if (timerRemaining > 0) {
-                        elements.timerDisplay.textContent = formatTime(timerRemaining);
-                        updateProgress();
-                    } else {
-                        clearInterval(timerInterval);
-                        isRunning = false;
-                        elements.startPauseBtn.textContent = 'Iniciar';
-                        elements.timerDisplay.textContent = formatTime(0);
-                        elements.progressBar.style.width = '100%';
-                        elements.progressPercentage.textContent = '100%';
-                        handleSessionEnd();
-                    }
-                }, 1000);
+    // Estado
+    let isMusicMuted = false;
+    let timerDuration = 25 * 60;
+    let timerRemaining = timerDuration;
+    let timerInterval = null;
+    let isRunning = false;
+    let currentSession = 'work';
+    let completedWorkSessions = 0;
+    let endTime = null;
+    let shortBreaksBeforeLongBreak = getFromStorage('shortBreaksBeforeLongBreak', 4);
+    let shortBreaksCompleted = 0;
+    let currentManualTheme = getFromStorage('manualTheme', '');
 
-                if (currentSession === 'work') playMusic();
-            }
+    const colorPalettes = {
+        "": [
+            { primary: '#00ccff', secondary: '#66ffff', gradientFrom: '#0d0d0d', gradientTo: '#121212', gradientAngle: '45deg', cursorColor: 'rgba(0, 204, 255, 0.7)' },
+            { primary: '#ff66cc', secondary: '#ff99ee', gradientFrom: '#1a0d0d', gradientTo: '#2c1212', gradientAngle: '60deg', cursorColor: 'rgba(255, 102, 204, 0.7)' },
+            { primary: '#66ff66', secondary: '#99ff99', gradientFrom: '#0d1a0d', gradientTo: '#121c12', gradientAngle: '30deg', cursorColor: 'rgba(102, 255, 102, 0.7)' },
+            { primary: '#ffcc00', secondary: '#ffe066', gradientFrom: '#1a1a0d', gradientTo: '#2c2c12', gradientAngle: '90deg', cursorColor: 'rgba(255, 204, 0, 0.7)' },
+            { primary: '#cc00ff', secondary: '#e066ff', gradientFrom: '#0d0d1a', gradientTo: '#12122c', gradientAngle: '135deg', cursorColor: 'rgba(204, 0, 255, 0.7)' }
+        ],
+        "azul": [{ primary: '#00ccff', secondary: '#66ffff', gradientFrom: '#0d0d0d', gradientTo: '#121212', gradientAngle: '45deg', cursorColor: 'rgba(0, 204, 255, 0.7)' }],
+        "rosa": [{ primary: '#ff66cc', secondary: '#ff99ee', gradientFrom: '#1a0d0d', gradientTo: '#2c1212', gradientAngle: '60deg', cursorColor: 'rgba(255, 102, 204, 0.7)' }],
+        "verde": [{ primary: '#66ff66', secondary: '#99ff99', gradientFrom: '#0d1a0d', gradientTo: '#121c12', gradientAngle: '30deg', cursorColor: 'rgba(102, 255, 102, 0.7)' }],
+        "amarillo": [{ primary: '#ffcc00', secondary: '#ffe066', gradientFrom: '#1a1a0d', gradientTo: '#2c2c12', gradientAngle: '90deg', cursorColor: 'rgba(255, 204, 0, 0.7)' }],
+        "morado": [{ primary: '#cc00ff', secondary: '#e066ff', gradientFrom: '#0d0d1a', gradientTo: '#12122c', gradientAngle: '135deg', cursorColor: 'rgba(204, 0, 255, 0.7)' }]
+    };
 
-            function pauseTimer() {
-                if (!isRunning) return;
-                isRunning = false;
-                elements.startPauseBtn.textContent = 'Iniciar';
-                clearInterval(timerInterval);
-                if (currentSession === 'work') pauseMusic();
-                clearTimerState();
-                changePalette();
-            }
+    const motivationalQuotes = [
+        "Sigue así, tu esfuerzo dará frutos.",
+        "Cada minuto cuenta, ¡aprovéchalo!",
+        "La perseverancia es la clave del éxito.",
+        "¡Grandioso trabajo! Un paso más cerca de tu meta.",
+        "Tu dedicación marca la diferencia.",
+        "La constancia vence a la resistencia."
+    ];
 
-            function resetTimer() {
-                clearInterval(timerInterval);
-                isRunning = false;
-                elements.startPauseBtn.textContent = 'Iniciar';
-                timerRemaining = timerDuration;
-                elements.timerDisplay.textContent = formatTime(timerRemaining);
-                elements.progressBar.style.width = '0%';
-                elements.progressPercentage.textContent = '0%';
-                if (currentSession === 'work') pauseMusic();
-                clearTimerState();
-            }
+    // Funciones Auxiliares
+    function getFromStorage(key, defaultValue) {
+        const val = localStorage.getItem(key);
+        return val !== null ? JSON.parse(val) : defaultValue;
+    }
 
-            function skipSession() {
-                if (isRunning) {
-                    clearInterval(timerInterval);
-                    isRunning = false;
-                }
-                handleSessionEnd(false);
-                elements.startPauseBtn.textContent = 'Iniciar'; 
-            }
+    function saveToStorage(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
+    }
 
-            function handleSessionEnd(shouldAutoStart = true) {
-                if (currentSession === 'work') {
-                    completedWorkSessions++;
-                    elements.sessionCounter.textContent = `Sesiones completadas: ${completedWorkSessions}`;
-                    localStorage.setItem('completedWorkSessions', completedWorkSessions);
-                }
-                elements.notificationSound.play();
-                notifyUser(`¡${capitalizeFirstLetter(currentSession)} finalizada!`);
-                
-                if (currentSession === 'work') {
-                    currentSession = 'shortBreak';
-                } else if (currentSession === 'shortBreak') {
-                    shortBreaksCompleted++;
-                    if (shortBreaksCompleted >= shortBreaksBeforeLongBreak) {
-                        currentSession = 'longBreak';
-                        shortBreaksCompleted = 0;
-                    } else {
-                        currentSession = 'work';
-                    }
-                } else if (currentSession === 'longBreak') {
-                    currentSession = 'work';
-                }
-                updateSessionType();
+    function capitalizeFirstLetter(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
 
-                if (shouldAutoStart && elements.autoStartCheckbox.checked) {
-                    startTimer();
-                    changePalette();
-                }
-            }
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
 
-            function capitalizeFirstLetter(string) {
-                return string.charAt(0).toUpperCase() + string.slice(1);
-            }
+    function selectRandomPalette(themeKey = "") {
+        const palettes = colorPalettes[themeKey] || colorPalettes[""];
+        return palettes[Math.floor(Math.random() * palettes.length)];
+    }
 
-            function notifyUser(message) {
-                if (Notification.permission === 'granted') {
-                    new Notification(message);
-                } else if (Notification.permission !== 'denied') {
-                    Notification.requestPermission().then(permission => {
-                        if (permission === 'granted') {
-                            new Notification(message);
-                        }
-                    });
-                }
-            }
+    function getDurationBySession(session) {
+        const work = parseInt(el.workDurationInput.value, 10);
+        const shortB = parseInt(el.shortBreakDurationInput.value, 10);
+        const longB = parseInt(el.longBreakDurationInput.value, 10);
 
-            function resetMusic() {
-                elements.backgroundMusic.pause();
-                elements.backgroundMusic.currentTime = 0;
-                if (!isMusicMuted && currentSession === 'work') {
-                    elements.musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/speaker.png";
-                }
-            }
+        const durations = {
+            work: work,
+            shortBreak: shortB,
+            longBreak: longB
+        };
+        return (durations[session] || 25) * 60;
+    }
 
-            function playMusic() {
-                if (!isMusicMuted && currentSession === 'work') {
-                    elements.backgroundMusic.play().then(() => {
-                        elements.musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/speaker.png";
-                    }).catch(() => {
-                        console.log('No se pudo reproducir la música.');
-                    });
-                }
-            }
+    function updateTimerDisplay(secondsRemaining) {
+        el.timerDisplay.textContent = formatTime(secondsRemaining);
+    }
 
-            function pauseMusic() {
-                elements.backgroundMusic.pause();
-                elements.musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/mute.png";
-            }
+    function updateProgressBar(percentage) {
+        el.progressBar.style.width = `${percentage}%`;
+        el.progressPercentage.textContent = `${Math.floor(percentage)}%`;
+    }
 
-            function changePalette() {
-                const palette = selectRandomPalette();
-                const props = ['--primary-color', '--secondary-color', '--background-gradient-from', '--background-gradient-to', '--button-gradient-angle', '--cursor-color'];
-                const values = [palette.primary, palette.secondary, palette.gradientFrom, palette.gradientTo, palette.gradientAngle, palette.cursorColor];
-                props.forEach((prop, index) => {
-                    elements.root.style.setProperty(prop, values[index]);
+    function notifyUser(message) {
+        if ('Notification' in window) {
+            if (Notification.permission === 'granted') {
+                new Notification(message);
+            } else if (Notification.permission !== 'denied') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') new Notification(message);
                 });
-                elements.customCursor.style.backgroundColor = palette.cursorColor;
-                elements.customCursor.style.borderColor = palette.primary;
             }
+        }
+    }
 
-            function updateProgress() {
-                const progress = ((timerDuration - timerRemaining) / timerDuration) * 100;
-                elements.progressBar.style.width = `${progress}%`;
-                elements.progressPercentage.textContent = `${Math.floor(progress)}%`;
-            }
-
-            function saveTimerState() {
-                localStorage.setItem('timerState', JSON.stringify({
-                    endTime,
-                    currentSession,
-                    completedWorkSessions,
-                    shortBreaksCompleted
-                }));
-            }
-
-            function clearTimerState() {
-                localStorage.removeItem('timerState');
-                endTime = null;
-            }
-
-            function saveDurations() {
-                const work = parseInt(elements.workDurationInput.value, 10);
-                const shortBreak = parseInt(elements.shortBreakDurationInput.value, 10);
-                const longBreak = parseInt(elements.longBreakDurationInput.value, 10);
-                const shortBreaksBeforeLongBreakVal = parseInt(elements.shortBreaksBeforeLongBreakInput.value, 10);
-
-                if ([work, shortBreak, longBreak, shortBreaksBeforeLongBreakVal].some(d => isNaN(d) || d < 1)) {
-                    alert('Por favor, introduce duraciones válidas (minutos) y número válido de descansos cortos.');
-                    return;
-                }
-
-                localStorage.setItem('workDuration', work);
-                localStorage.setItem('shortBreakDuration', shortBreak);
-                localStorage.setItem('longBreakDuration', longBreak);
-                localStorage.setItem('shortBreaksBeforeLongBreak', shortBreaksBeforeLongBreakVal);
-                shortBreaksBeforeLongBreak = shortBreaksBeforeLongBreakVal;
-
-                alert('Duraciones guardadas exitosamente.');
-                updateSessionType();
-                changePalette();
-            }
-
-            function loadDurations() {
-                const work = localStorage.getItem('workDuration');
-                const shortBreak = localStorage.getItem('shortBreakDuration');
-                const longBreak = localStorage.getItem('longBreakDuration');
-                const shortBreaksBeforeLongBreakStored = parseInt(localStorage.getItem('shortBreaksBeforeLongBreak'), 10);
-
-                if (work) elements.workDurationInput.value = work;
-                if (shortBreak) elements.shortBreakDurationInput.value = shortBreak;
-                if (longBreak) elements.longBreakDurationInput.value = longBreak;
-                if (shortBreaksBeforeLongBreakStored) {
-                    elements.shortBreaksBeforeLongBreakInput.value = shortBreaksBeforeLongBreakStored;
-                    shortBreaksBeforeLongBreak = shortBreaksBeforeLongBreakStored;
-                }
-
-                updateSessionType();
-            }
-
-            function addTask(task = {}) {
-                const taskName = task.name || elements.newTaskInput.value.trim();
-                if (!taskName) {
-                    alert('Por favor, introduce una tarea.');
-                    return;
-                }
-
-                const li = document.createElement('li');
-                li.textContent = taskName;
-                li.dataset.id = task.id || Date.now();
-                if (task.completed) li.classList.add('completed');
-
-                const completeBtn = document.createElement('button');
-                completeBtn.textContent = 'DONE';
-                completeBtn.title = 'Marcar como completado';
-                completeBtn.classList.add('complete-btn');
-
-                const deleteBtn = document.createElement('button');
-                deleteBtn.textContent = 'ERASE';
-                deleteBtn.title = 'Eliminar tarea';
-                deleteBtn.classList.add('delete-btn');
-
-                li.appendChild(completeBtn);
-                li.appendChild(deleteBtn);
-                elements.taskList.appendChild(li);
-
-                if (!task.id) {
-                    saveTask({ id: li.dataset.id, name: taskName, completed: false });
-                    elements.newTaskInput.value = '';
-                }
-            }
-
-            function saveTask(task) {
-                const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-                tasks.push(task);
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-            }
-
-            function saveAllTasks() {
-                const tasks = Array.from(elements.taskList.children).map(li => ({
-                    id: li.dataset.id,
-                    name: li.firstChild.textContent.trim(),
-                    completed: li.classList.contains('completed')
-                }));
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-            }
-
-            function deleteTask(id) {
-                let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-                tasks = tasks.filter(task => task.id !== id);
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-            }
-
-            function loadData() {
-                completedWorkSessions = parseInt(localStorage.getItem('completedWorkSessions'), 10) || 0;
-                elements.sessionCounter.textContent = `Sesiones completadas: ${completedWorkSessions}`;
-
-                const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-                tasks.forEach(addTask);
-
-                loadDurations();
-
-                const timerState = JSON.parse(localStorage.getItem('timerState') || 'null');
-                if (timerState) {
-                    endTime = timerState.endTime;
-                    currentSession = timerState.currentSession;
-                    completedWorkSessions = timerState.completedWorkSessions || 0;
-                    shortBreaksCompleted = timerState.shortBreaksCompleted || 0; 
-                    elements.sessionIndicatorText.textContent = `Tipo de Sesión: ${capitalizeFirstLetter(currentSession)}`;
-                    timerDuration = getDurationBySession(currentSession);
-                    const now = Date.now();
-                    timerRemaining = Math.floor((endTime - now) / 1000);
-
-                    if (timerRemaining > 0) {
-                        elements.timerDisplay.textContent = formatTime(timerRemaining);
-                        elements.progressContainer.style.display = 'block';
-                        updateProgress();
-                        startTimer(false);
-                    } else {
-                        handleSessionEnd();
-                    }
-                }
-
-                isMusicMuted = JSON.parse(localStorage.getItem('isMusicMuted')) || false;
-                elements.backgroundMusic.muted = isMusicMuted;
-                updateMusicIcon();
-
-                const isAutoStartEnabled = JSON.parse(localStorage.getItem('isAutoStartEnabled'));
-                elements.autoStartCheckbox.checked = isAutoStartEnabled || false;
-            }
-
-            function updateMusicIcon() {
-                elements.musicIcon.src = isMusicMuted
-                    ? "https://img.icons8.com/ios-filled/50/ffffff/mute.png"
-                    : "https://img.icons8.com/ios-filled/50/ffffff/speaker.png";
-            }
-
-            function toggleMusic() {
-                isMusicMuted = !isMusicMuted;
-                elements.backgroundMusic.muted = isMusicMuted;
-                localStorage.setItem('isMusicMuted', isMusicMuted);
-                updateMusicIcon();
-                if (currentSession === 'work') {
-                    if (isMusicMuted) {
-                        pauseMusic();
-                    } else {
-                        playMusic();
-                    }
-                }
-                changePalette();
-            }
-
-            elements.startPauseBtn.addEventListener('click', () => {
-                if (isRunning) {
-                    pauseTimer();
-                } else {
-                    startTimer();
-                    changePalette();
-                }
-            });
-
-            elements.resetBtn.addEventListener('click', () => {
-                resetTimer();
-                changePalette();
-            });
-
-            elements.skipBtn.addEventListener('click', () => {
-                skipSession();
-                changePalette();
-            });
-
-            elements.saveDurationsBtn.addEventListener('click', saveDurations);
-
-            elements.addTaskBtn.addEventListener('click', () => {
-                addTask();
-                changePalette();
-                saveAllTasks();
-            });
-
-            elements.newTaskInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    addTask();
-                    changePalette();
-                    saveAllTasks();
-                }
-            });
-
-            elements.taskList.addEventListener('click', (e) => {
-                const li = e.target.closest('li');
-                if (!li) return;
-                const id = li.dataset.id;
-
-                if (e.target.classList.contains('complete-btn')) {
-                    li.classList.toggle('completed');
-                    saveAllTasks();
-                }
-
-                if (e.target.classList.contains('delete-btn')) {
-                    li.remove();
-                    deleteTask(id);
-                }
-            });
-
-            elements.musicControl.addEventListener('click', toggleMusic);
-
-            document.addEventListener('mousemove', (e) => {
-                elements.customCursor.style.left = `${e.clientX}px`;
-                elements.customCursor.style.top = `${e.clientY}px`;
-            });
-
-            document.querySelectorAll('.interactive').forEach(elem => {
-                elem.addEventListener('mouseenter', () => {
-                    elements.customCursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                    elements.customCursor.style.backgroundColor = '#ff6600';
-                    elements.customCursor.style.borderColor = '#ff6600';
-                });
-
-                elem.addEventListener('mouseleave', () => {
-                    elements.customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
-                    elements.customCursor.style.backgroundColor = getComputedStyle(elements.root).getPropertyValue('--cursor-color');
-                    elements.customCursor.style.borderColor = getComputedStyle(elements.root).getPropertyValue('--primary-color');
-                });
-            });
-
-            // Guardar el estado de auto inicio al cambiar la checkbox
-            elements.autoStartCheckbox.addEventListener('change', () => {
-                localStorage.setItem('isAutoStartEnabled', elements.autoStartCheckbox.checked);
-            });
-
-            if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-                Notification.requestPermission();
-            }
-
-            loadData();
-
-            elements.toggleDurationsBtn.addEventListener('click', () => {
-                elements.dropdownContent.classList.toggle('open');
-                elements.toggleDurationsBtn.classList.toggle('active');
-            });
+    function saveTimerState() {
+        saveToStorage('timerState', {
+            endTime,
+            currentSession,
+            completedWorkSessions,
+            shortBreaksCompleted
         });
-    </script>
+    }
+
+    function clearTimerState() {
+        localStorage.removeItem('timerState');
+        endTime = null;
+    }
+
+    function updateSessionType() {
+        timerDuration = getDurationBySession(currentSession);
+        timerRemaining = timerDuration;
+        updateTimerDisplay(timerRemaining);
+        updateProgressBar(0);
+        el.sessionIndicator.textContent = `Tipo de Sesión: ${capitalizeFirstLetter(currentSession)}`;
+        resetMusic();
+        clearTimerState();
+    }
+
+    function startTimer(shouldSave = true) {
+        if (isRunning) return;
+        isRunning = true;
+        el.startPauseBtn.textContent = 'Pausar';
+
+        if (shouldSave) {
+            endTime = Date.now() + timerRemaining * 1000;
+            saveTimerState();
+        }
+
+        timerInterval = setInterval(() => {
+            const now = Date.now();
+            timerRemaining = Math.floor((endTime - now) / 1000);
+
+            if (timerRemaining > 0) {
+                updateTimerDisplay(timerRemaining);
+                const progress = ((getDurationBySession(currentSession) - timerRemaining) / getDurationBySession(currentSession)) * 100;
+                updateProgressBar(progress);
+            } else {
+                stopTimer();
+                updateTimerDisplay(0);
+                updateProgressBar(100);
+                handleSessionEnd();
+            }
+        }, 1000);
+
+        if (currentSession === 'work') playMusic();
+    }
+
+    function pauseTimer() {
+        if (!isRunning) return;
+        isRunning = false;
+        el.startPauseBtn.textContent = 'Iniciar';
+        clearInterval(timerInterval);
+        if (currentSession === 'work') pauseMusic();
+        clearTimerState();
+        changePalette();
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+        isRunning = false;
+        el.startPauseBtn.textContent = 'Iniciar';
+        if (currentSession === 'work') pauseMusic();
+        clearTimerState();
+    }
+
+    function resetTimer() {
+        stopTimer();
+        timerRemaining = getDurationBySession(currentSession);
+        updateTimerDisplay(timerRemaining);
+        updateProgressBar(0);
+        changePalette();
+    }
+
+    function skipSession() {
+        if (isRunning) {
+            stopTimer();
+        }
+        handleSessionEnd(false);
+        changePalette();
+    }
+
+    function handleSessionEnd(shouldAutoStart = true) {
+        if (currentSession === 'work') {
+            completedWorkSessions++;
+            el.sessionCounter.textContent = `Sesiones completadas: ${completedWorkSessions}`;
+            saveToStorage('completedWorkSessions', completedWorkSessions);
+            logSessionCompletion(); // Guarda la sesión en estadísticas
+            showMotivationalQuote();
+        }
+        el.notificationSound.play();
+        notifyUser(`¡${capitalizeFirstLetter(currentSession)} finalizada!`);
+
+        if (currentSession === 'work') {
+            currentSession = 'shortBreak';
+        } else if (currentSession === 'shortBreak') {
+            shortBreaksCompleted++;
+            if (shortBreaksCompleted >= shortBreaksBeforeLongBreak) {
+                currentSession = 'longBreak';
+                shortBreaksCompleted = 0;
+            } else {
+                currentSession = 'work';
+            }
+        } else {
+            currentSession = 'work';
+        }
+
+        updateSessionType();
+
+        if (shouldAutoStart && el.autoStartCheckbox.checked) {
+            startTimer();
+            changePalette();
+        }
+    }
+
+    function changePalette() {
+        let palette;
+        if (currentManualTheme && colorPalettes[currentManualTheme]) {
+            // Tema manual
+            palette = selectRandomPalette(currentManualTheme);
+        } else {
+            // Tema aleatorio
+            palette = selectRandomPalette("");
+        }
+
+        const root = document.documentElement;
+        root.style.setProperty('--primary-color', palette.primary);
+        root.style.setProperty('--secondary-color', palette.secondary);
+        root.style.setProperty('--background-gradient-from', palette.gradientFrom);
+        root.style.setProperty('--background-gradient-to', palette.gradientTo);
+        root.style.setProperty('--button-gradient-angle', palette.gradientAngle);
+        root.style.setProperty('--cursor-color', palette.cursorColor);
+
+        el.customCursor.style.backgroundColor = palette.cursorColor;
+        el.customCursor.style.borderColor = palette.primary;
+    }
+
+    // Tareas
+    function addTask(task = {}) {
+        const taskName = task.name || el.newTaskInput.value.trim();
+        if (!taskName) {
+            alert('Por favor, introduce una tarea.');
+            return;
+        }
+
+        const li = document.createElement('li');
+        li.textContent = taskName;
+        li.dataset.id = task.id || Date.now();
+        if (task.completed) li.classList.add('completed');
+
+        const completeBtn = document.createElement('button');
+        completeBtn.textContent = 'DONE';
+        completeBtn.title = 'Marcar como completado';
+        completeBtn.classList.add('complete-btn');
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'ERASE';
+        deleteBtn.title = 'Eliminar tarea';
+        deleteBtn.classList.add('delete-btn');
+
+        li.appendChild(completeBtn);
+        li.appendChild(deleteBtn);
+        el.taskList.appendChild(li);
+
+        if (!task.id) {
+            saveTask({ id: li.dataset.id, name: taskName, completed: false });
+            el.newTaskInput.value = '';
+        }
+    }
+
+    function saveTask(task) {
+        const tasks = getFromStorage('tasks', []);
+        tasks.push(task);
+        saveToStorage('tasks', tasks);
+    }
+
+    function saveAllTasks() {
+        const tasks = Array.from(el.taskList.children).map(li => ({
+            id: li.dataset.id,
+            name: li.firstChild.textContent.trim(),
+            completed: li.classList.contains('completed')
+        }));
+        saveToStorage('tasks', tasks);
+    }
+
+    function deleteTask(id) {
+        let tasks = getFromStorage('tasks', []);
+        tasks = tasks.filter(task => task.id !== id);
+        saveToStorage('tasks', tasks);
+    }
+
+    // Música y Sonidos
+    function playMusic() {
+        if (!isMusicMuted && currentSession === 'work') {
+            el.backgroundMusic.play().catch(() => {
+                console.log('No se pudo reproducir la música.');
+            });
+        }
+    }
+
+    function pauseMusic() {
+        el.backgroundMusic.pause();
+    }
+
+    function resetMusic() {
+        el.backgroundMusic.pause();
+        el.backgroundMusic.currentTime = 0;
+    }
+
+    function toggleMusic() {
+        isMusicMuted = !isMusicMuted;
+        saveToStorage('isMusicMuted', isMusicMuted);
+        updateMusicIcon();
+        if (currentSession === 'work') {
+            if (isMusicMuted) {
+                pauseMusic();
+            } else {
+                playMusic();
+            }
+        }
+        changePalette();
+    }
+
+    function updateMusicIcon() {
+        el.musicControl.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = isMusicMuted
+            ? "https://img.icons8.com/ios-filled/50/ffffff/mute.png"
+            : "https://img.icons8.com/ios-filled/50/ffffff/speaker.png";
+        el.musicControl.appendChild(img);
+    }
+
+    // Estadísticas
+    function logSessionCompletion() {
+        // Guardar timestamp de la sesión completada
+        const sessionsLog = getFromStorage('sessionsLog', []);
+        sessionsLog.push(Date.now());
+        saveToStorage('sessionsLog', sessionsLog);
+    }
+
+    function showStats() {
+        const sessionsLog = getFromStorage('sessionsLog', []);
+        const now = new Date();
+        const today = sessionsLog.filter(s => {
+            const d = new Date(s);
+            return d.toDateString() === now.toDateString();
+        }).length;
+        el.todaySessionsCount.textContent = `Sesiones Hoy: ${today}`;
+
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - now.getDay()); // Lunes
+        const thisWeek = sessionsLog.filter(s => {
+            const d = new Date(s);
+            return d >= weekStart && d <= now;
+        }).length;
+        el.weekSessionsCount.textContent = `Sesiones Esta Semana: ${thisWeek}`;
+
+        el.statsModal.classList.add('active');
+    }
+
+    function showMotivationalQuote() {
+        const quote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+        el.quoteText.textContent = quote;
+        el.quoteModal.classList.add('active');
+    }
+
+    // Cargar Datos
+    function loadData() {
+        completedWorkSessions = getFromStorage('completedWorkSessions', 0);
+        el.sessionCounter.textContent = `Sesiones completadas: ${completedWorkSessions}`;
+
+        const tasks = getFromStorage('tasks', []);
+        tasks.forEach(addTask);
+
+        const work = getFromStorage('workDuration', 25);
+        const shortB = getFromStorage('shortBreakDuration', 5);
+        const longB = getFromStorage('longBreakDuration', 15);
+        const sBeforeL = getFromStorage('shortBreaksBeforeLongBreak', 4);
+
+        el.workDurationInput.value = work;
+        el.shortBreakDurationInput.value = shortB;
+        el.longBreakDurationInput.value = longB;
+        el.shortBreaksBeforeLongBreakInput.value = sBeforeL;
+        shortBreaksBeforeLongBreak = sBeforeL;
+
+        const nSound = getFromStorage('notificationSoundFile', 'notification.mp3');
+        const mTrack = getFromStorage('musicTrackFile', 'midi.mp3');
+        el.notificationSoundSelect.value = nSound;
+        el.musicTrackSelect.value = mTrack;
+        el.notificationSound.src = nSound;
+        el.backgroundMusic.src = mTrack;
+
+        const isAuto = getFromStorage('isAutoStartEnabled', false);
+        el.autoStartCheckbox.checked = isAuto;
+
+        isMusicMuted = getFromStorage('isMusicMuted', false);
+        el.backgroundMusic.muted = isMusicMuted;
+        updateMusicIcon();
+
+        changePalette();
+
+        const timerState = getFromStorage('timerState', null);
+        if (timerState) {
+            endTime = timerState.endTime;
+            currentSession = timerState.currentSession;
+            completedWorkSessions = timerState.completedWorkSessions || 0;
+            shortBreaksCompleted = timerState.shortBreaksCompleted || 0;
+            el.sessionIndicator.textContent = `Tipo de Sesión: ${capitalizeFirstLetter(currentSession)}`;
+            timerDuration = getDurationBySession(currentSession);
+            const now = Date.now();
+            timerRemaining = Math.floor((endTime - now) / 1000);
+
+            if (timerRemaining > 0) {
+                updateTimerDisplay(timerRemaining);
+                const progress = ((getDurationBySession(currentSession) - timerRemaining) / getDurationBySession(currentSession)) * 100;
+                updateProgressBar(progress);
+                startTimer(false);
+            } else {
+                handleSessionEnd();
+            }
+        }
+
+        if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+            Notification.requestPermission();
+        }
+    }
+
+    // Eventos
+    el.startPauseBtn.addEventListener('click', () => {
+        isRunning ? pauseTimer() : startTimer();
+        changePalette();
+    });
+
+    el.resetBtn.addEventListener('click', resetTimer);
+    el.skipBtn.addEventListener('click', skipSession);
+
+    el.saveDurationsBtn.addEventListener('click', () => {
+        const work = parseInt(el.workDurationInput.value, 10);
+        const shortB = parseInt(el.shortBreakDurationInput.value, 10);
+        const longB = parseInt(el.longBreakDurationInput.value, 10);
+        const sBeforeL = parseInt(el.shortBreaksBeforeLongBreakInput.value, 10);
+        const nSound = el.notificationSoundSelect.value;
+        const mTrack = el.musicTrackSelect.value;
+        const mTheme = el.manualThemeSelect.value;
+
+        if ([work, shortB, longB, sBeforeL].some(d => isNaN(d) || d < 1)) {
+            alert('Por favor, introduce duraciones válidas');
+            return;
+        }
+
+        saveToStorage('workDuration', work);
+        saveToStorage('shortBreakDuration', shortB);
+        saveToStorage('longBreakDuration', longB);
+        saveToStorage('shortBreaksBeforeLongBreak', sBeforeL);
+        saveToStorage('notificationSoundFile', nSound);
+        saveToStorage('musicTrackFile', mTrack);
+        saveToStorage('manualTheme', mTheme);
+
+        shortBreaksBeforeLongBreak = sBeforeL;
+        el.notificationSound.src = nSound;
+        el.backgroundMusic.src = mTrack;
+        currentManualTheme = mTheme;
+
+        alert('Opciones guardadas exitosamente.');
+        updateSessionType();
+        changePalette();
+    });
+
+    el.addTaskBtn.addEventListener('click', () => {
+        addTask();
+        changePalette();
+        saveAllTasks();
+    });
+
+    el.newTaskInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            addTask();
+            changePalette();
+            saveAllTasks();
+        }
+    });
+
+    el.taskList.addEventListener('click', (e) => {
+        const li = e.target.closest('li');
+        if (!li) return;
+        const id = li.dataset.id;
+
+        if (e.target.classList.contains('complete-btn')) {
+            li.classList.toggle('completed');
+            saveAllTasks();
+        }
+
+        if (e.target.classList.contains('delete-btn')) {
+            li.remove();
+            deleteTask(id);
+        }
+    });
+
+    el.musicControl.addEventListener('click', toggleMusic);
+
+    document.addEventListener('mousemove', (e) => {
+        el.customCursor.style.left = `${e.clientX}px`;
+        el.customCursor.style.top = `${e.clientY}px`;
+    });
+
+    document.querySelectorAll('.interactive').forEach(elem => {
+        elem.addEventListener('mouseenter', () => {
+            el.customCursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            el.customCursor.style.backgroundColor = '#ff6600';
+            el.customCursor.style.borderColor = '#ff6600';
+        });
+
+        elem.addEventListener('mouseleave', () => {
+            el.customCursor.style.transform = 'translate(-50%, -50%) scale(1)';
+            el.customCursor.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--cursor-color');
+            el.customCursor.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
+        });
+    });
+
+    el.autoStartCheckbox.addEventListener('change', () => {
+        saveToStorage('isAutoStartEnabled', el.autoStartCheckbox.checked);
+    });
+
+    el.toggleDurationsBtn.addEventListener('click', () => {
+        el.dropdownContent.classList.toggle('open');
+        el.toggleDurationsBtn.classList.toggle('active');
+    });
+
+    el.focusToggle.addEventListener('click', () => {
+        el.pomodoroContainer.classList.toggle('focus-mode');
+    });
+
+    el.statsToggle.addEventListener('click', showStats);
+    el.closeStatsBtn.addEventListener('click', () => el.statsModal.classList.remove('active'));
+
+    el.closeQuoteBtn.addEventListener('click', () => el.quoteModal.classList.remove('active'));
+
+    el.themeToggle.addEventListener('click', () => {
+        // Si hay tema manual, lo quita, si no, vuelve a aleatorio
+        if (currentManualTheme) {
+            currentManualTheme = "";
+        } else {
+            // Cicla a un siguiente tema manual por demo
+            // En la realidad, podría abrir un menú, pero acá simplemente
+            // alternamos entre algunos temas manualmente.
+            const themes = ["azul", "rosa", "verde", "amarillo", "morado"];
+            currentManualTheme = themes[Math.floor(Math.random() * themes.length)];
+        }
+        saveToStorage('manualTheme', currentManualTheme);
+        changePalette();
+    });
+
+    // Cargar Data Inicial
+    loadData();
+});
+</script>
 </body>
 </html>
