@@ -38,7 +38,6 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden;
             position: relative;
             cursor: none;
             animation: backgroundPulse 20s infinite alternate;
@@ -64,8 +63,7 @@
             background-size: cover;
             transition: border-color 0.5s, box-shadow 0.5s, background 0.5s;
             max-height: 95vh;
-            position: relative;
-            overflow: hidden;
+            /* Removed overflow: hidden to allow .scrollable-content to scroll properly */
         }
 
         /* Sección Fija */
@@ -82,13 +80,13 @@
         /* Botón de Música Integrado en la Sección Fija */
         .music-control {
             position: absolute;
-            top: 20px; /* Ajustado para igual separación */
-            right: 20px; /* Ajustado para igual separación */
+            top: 20px; 
+            right: 20px; 
             background: linear-gradient(var(--button-gradient-angle), var(--primary-color), var(--secondary-color));
             border: none;
             border-radius: 50%;
-            width: 25px; /* Reducido tamaño */
-            height: 25px; /* Reducido tamaño */
+            width: 25px; 
+            height: 25px; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -104,8 +102,8 @@
         }
 
         .music-control img {
-            width: 14px; /* Reducido tamaño */
-            height: 14px; /* Reducido tamaño */
+            width: 14px; 
+            height: 14px; 
             filter: brightness(0) invert(1);
             transition: transform 0.3s;
         }
@@ -162,14 +160,6 @@
             color: var(--primary-color);
             text-shadow: 0.5px 0.5px 1px #000;
         }
-
-        /* Comentado para evitar conflictos con las nuevas clases */
-        /* 
-        .add-task input {
-            flex: 1;
-            padding: 0.5rem; 
-        }
-        */
 
         select, input[type="number"], .add-task input {
             width: 100%;
@@ -240,14 +230,13 @@
             overflow: hidden;
         }
 
-        /* Reducido el tamaño del pseudo-elemento para evitar cortar el botón */
         button.control-btn::before, .add-task button::before, button.skip-btn::before {
             content: '';
             position: absolute;
-            top: -25%; /* Ajustado de -50% a -25% */
-            left: -25%; /* Ajustado de -50% a -25% */
-            width: 150%; /* Reducido de 200% a 150% */
-            height: 150%; /* Reducido de 200% a 150% */
+            top: -25%; 
+            left: -25%; 
+            width: 150%; 
+            height: 150%; 
             background: rgba(255, 255, 255, 0.1);
             transform: rotate(45deg);
             transition: all 0.5s;
@@ -343,35 +332,6 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Scrollbars estilizados */
-        .task-list::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .task-list::-webkit-scrollbar-track {
-            background: #1e1e1e;
-        }
-
-        .task-list::-webkit-scrollbar-thumb {
-            background-color: var(--primary-color);
-            border-radius: 4px;
-        }
-
-        /* Scrollbars globales */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--background-gradient-from);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background-color: var(--primary-color);
-            border-radius: 4px;
-        }
-
         .task-list li {
             display: flex;
             justify-content: space-between;
@@ -427,13 +387,6 @@
             100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
 
-        .interactive:hover #customCursor,
-        .interactive:focus #customCursor {
-            transform: translate(-50%, -50%) scale(1.5);
-            background-color: #ff6600;
-            border: 2px solid #ff6600;
-        }
-
         /* Media Queries Mejoradas para Pantallas Grandes */
         @media (min-width: 1024px) {
             .pomodoro-container {
@@ -480,13 +433,13 @@
             }
 
             .music-control {
-                width: 25px; /* Ajustado para mantener el tamaño reducido */
-                height: 25px; /* Ajustado para mantener el tamaño reducido */
+                width: 25px; 
+                height: 25px;
             }
 
             .music-control img {
-                width: 14px; /* Ajustado para mantener el tamaño reducido */
-                height: 14px; /* Ajustado para mantener el tamaño reducido */
+                width: 14px; 
+                height: 14px;
             }
 
             #customCursor {
@@ -541,13 +494,13 @@
             }
 
             .music-control {
-                width: 25px; /* Mantiene el tamaño reducido */
-                height: 25px; /* Mantiene el tamaño reducido */
+                width: 25px;
+                height: 25px;
             }
 
             .music-control img {
-                width: 14px; /* Mantiene el tamaño reducido */
-                height: 14px; /* Mantiene el tamaño reducido */
+                width: 14px;
+                height: 14px;
             }
 
             #customCursor {
@@ -602,13 +555,13 @@
             }
 
             .music-control {
-                width: 25px; /* Mantiene el tamaño reducido */
-                height: 25px; /* Mantiene el tamaño reducido */
+                width: 25px;
+                height: 25px;
             }
 
             .music-control img {
-                width: 14px; /* Mantiene el tamaño reducido */
-                height: 14px; /* Mantiene el tamaño reducido */
+                width: 14px;
+                height: 14px;
             }
 
             #customCursor {
@@ -627,8 +580,8 @@
         /* Estilos para la sección desplegable (Acordeón) */
         .dropdown {
             width: 100%;
-            margin-top: 0.5rem; /* Reducido de 1rem a 0.5rem */
-            margin-bottom: 1rem; /* Reducido de 1.5rem a 1rem */
+            margin-top: 0.5rem; 
+            margin-bottom: 1rem;
         }
 
         .dropdown button {
@@ -647,14 +600,14 @@
         }
 
         .dropdown button::after {
-            content: '\25BC'; /* Triángulo hacia abajo */
+            content: '\25BC'; 
             position: absolute;
             right: 1rem;
             transition: transform 0.3s;
         }
 
         .dropdown button.active::after {
-            transform: rotate(180deg); /* Triángulo hacia arriba */
+            transform: rotate(180deg);
         }
 
         .dropdown-content {
@@ -665,40 +618,19 @@
         }
 
         .dropdown-content.open {
-            max-height: 500px; /* Valor suficientemente grande para mostrar el contenido */
+            max-height: 500px; 
         }
 
-        /* Ajustes dentro de la sección desplegable */
         .dropdown-content .task-section {
             padding: 0.5rem 0;
         }
 
-        /* Espaciado adicional entre secciones */
-        .fixed-header > *:not(.header):not(h2):not(.timer-display):not(.session-counter):not(.footer):not(.session-indicator) {
-            margin-top: 1rem; /* Reducido de 1rem a 0.5rem */
-        }
-
-        /* Botones personalizados en la sección desplegable */
-        .dropdown-content .task-section .control-btn::before {
-            content: '';
-            position: absolute;
-            top: -25%;
-            left: -25%;
-            width: 200%; /* Increased to cover wider buttons */
-            height: 200%; /* Increased to cover wider buttons */
-            background: rgba(255, 255, 255, 0.1);
-            transform: rotate(45deg);
-            transition: all 0.5s;
-        }
-
-        /* Checkbox Container */
         .checkbox-container {
             display: flex;
             align-items: center;
-            margin-top: 0.5rem; /* Reducido de 1rem a 0.5rem */
+            margin-top: 0.5rem;
         }
 
-        /* Ocultar la checkbox original */
         .auto-start-checkbox {
             position: absolute;
             opacity: 0;
@@ -707,7 +639,6 @@
             width: 0;
         }
 
-        /* Crear un nuevo estilo para la checkbox */
         .checkbox-container label {
             position: relative;
             padding-left: 25px;
@@ -717,7 +648,6 @@
             color: var(--primary-color);
         }
 
-        /* Estilo de la checkbox personalizada */
         .checkbox-container label::before {
             content: "";
             position: absolute;
@@ -732,13 +662,11 @@
             transition: background-color 0.3s, border-color 0.3s;
         }
 
-        /* Estilo cuando la checkbox está marcada */
         .auto-start-checkbox:checked + label::before {
             background-color: var(--primary-color);
             border-color: var(--secondary-color);
         }
 
-        /* Añadir un checkmark cuando está marcada */
         .checkbox-container label::after {
             content: "";
             position: absolute;
@@ -757,61 +685,28 @@
             opacity: 1;
         }
 
-        /* Ajustar la sección de añadir tareas para usar Flexbox */
         .task-section .add-task {
             display: flex;
             align-items: center;
-            gap: 0.5rem; /* Espacio entre el input y el botón */
-            margin-top: 0.5rem; /* Ajuste opcional para el margen superior */
+            gap: 0.5rem; 
+            margin-top: 0.5rem; 
         }
 
-        /* Hacer que el input ocupe el espacio disponible */
         .task-section .add-task input {
             flex: 1;
-            padding: 0.5rem; /* Asegura un buen tamaño de entrada */
+            padding: 0.5rem; 
         }
 
-        /* Ajustar el botón "Añadir" para que no sea demasiado grande */
         .task-section .add-task button {
-            margin-top: -0.8rem; /* Ajuste opcional para el margen superior */
+            margin-top: -0.8rem; 
             flex: 0 0 auto;
-            padding: 0.5rem 1rem; /* Asegura que el botón tenga un tamaño adecuado */
+            padding: 0.5rem 1rem;
         }
 
-        /* Scrollbars estilizados para la barra de tareas */
-        .task-list::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .task-list::-webkit-scrollbar-track {
-            background: #1e1e1e;
-        }
-
-        .task-list::-webkit-scrollbar-thumb {
-            background-color: var(--primary-color);
-            border-radius: 4px;
-        }
-
-        /* Scrollbars globales */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--background-gradient-from);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background-color: var(--primary-color);
-            border-radius: 4px;
-        }
-
-        /* Estilos específicos para los inputs del menú desplegable */
         .duration-input {
             display: flex;
             flex-direction: column;
-            margin-bottom: 0.8rem; /* Espaciado entre cada input */
+            margin-bottom: 0.8rem;
         }
 
         .duration-input label {
@@ -836,42 +731,6 @@
             border-color: var(--secondary-color);
             box-shadow: inset 0 0 3px var(--secondary-color);
             outline: none;
-        }
-
-        /* Ajustes para pantallas grandes */
-        @media (min-width: 1024px) {
-            .duration-input input {
-                font-size: 1rem;
-                padding: 0.6rem;
-            }
-
-            .duration-input label {
-                font-size: 1rem;
-            }
-        }
-
-        /* Ajustes para pantallas medianas */
-        @media (min-width: 768px) and (max-width: 1023px) {
-            .duration-input input {
-                font-size: 0.9rem;
-                padding: 0.5rem;
-            }
-
-            .duration-input label {
-                font-size: 0.85rem;
-            }
-        }
-
-        /* Ajustes para pantallas pequeñas y móviles */
-        @media (max-width: 767px) {
-            .duration-input input {
-                font-size: 0.8rem;
-                padding: 0.5rem;
-            }
-
-            .duration-input label {
-                font-size: 0.8rem;
-            }
         }
     </style>
 </head>
@@ -983,12 +842,11 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Caché de elementos DOM
             const elements = {
                 startPauseBtn: document.getElementById('startPauseBtn'),
                 resetBtn: document.getElementById('resetBtn'),
                 skipBtn: document.getElementById('skipBtn'),
-                sessionIndicator: document.getElementById('sessionIndicator'),
+                sessionIndicatorText: document.getElementById('sessionIndicator'),
                 progressContainer: document.getElementById('progressContainer'),
                 progressBar: document.getElementById('progressBar'),
                 progressPercentage: document.getElementById('progressPercentage'),
@@ -1002,7 +860,7 @@
                 workDurationInput: document.getElementById('workDuration'),
                 shortBreakDurationInput: document.getElementById('shortBreakDuration'),
                 longBreakDurationInput: document.getElementById('longBreakDuration'),
-                shortBreaksBeforeLongBreakInput: document.getElementById('shortBreaksBeforeLongBreak'), // Nuevo
+                shortBreaksBeforeLongBreakInput: document.getElementById('shortBreaksBeforeLongBreak'),
                 taskList: document.getElementById('taskList'),
                 addTaskBtn: document.getElementById('addTaskBtn'),
                 newTaskInput: document.getElementById('newTaskInput'),
@@ -1010,8 +868,7 @@
                 root: document.documentElement,
                 toggleDurationsBtn: document.getElementById('toggleDurationsBtn'),
                 dropdownContent: document.getElementById('dropdownContent'),
-                autoStartCheckbox: document.getElementById('autoStartCheckbox'),
-                sessionIndicatorText: document.getElementById('sessionIndicator')
+                autoStartCheckbox: document.getElementById('autoStartCheckbox')
             };
 
             let isMusicMuted = false;
@@ -1022,8 +879,8 @@
             let currentSession = 'work';
             let completedWorkSessions = 0;
             let endTime = null;
-            let shortBreaksBeforeLongBreak = parseInt(localStorage.getItem('shortBreaksBeforeLongBreak'), 10) || 4; // Nuevo
-            let shortBreaksCompleted = 0; // Nuevo
+            let shortBreaksBeforeLongBreak = parseInt(localStorage.getItem('shortBreaksBeforeLongBreak'), 10) || 4;
+            let shortBreaksCompleted = 0;
 
             const colorPalettes = [
                 { primary: '#00ccff', secondary: '#66ffff', gradientFrom: '#0d0d0d', gradientTo: '#121212', gradientAngle: '45deg', cursorColor: 'rgba(0, 204, 255, 0.7)' },
@@ -1033,12 +890,10 @@
                 { primary: '#cc00ff', secondary: '#e066ff', gradientFrom: '#0d0d1a', gradientTo: '#12122c', gradientAngle: '135deg', cursorColor: 'rgba(204, 0, 255, 0.7)' }
             ];
 
-            // Función para seleccionar una paleta aleatoria
             function selectRandomPalette() {
                 return colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
             }
 
-            // Función para actualizar el tipo de sesión
             function updateSessionType() {
                 timerDuration = getDurationBySession(currentSession);
                 timerRemaining = timerDuration;
@@ -1050,7 +905,6 @@
                 clearTimerState();
             }
 
-            // Obtener duración según el tipo de sesión
             function getDurationBySession(session) {
                 const durations = {
                     work: parseInt(elements.workDurationInput.value, 10),
@@ -1060,14 +914,12 @@
                 return (durations[session] || 25) * 60;
             }
 
-            // Formatear tiempo en mm:ss
             function formatTime(seconds) {
                 const mins = Math.floor(seconds / 60);
                 const secs = seconds % 60;
                 return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
             }
 
-            // Iniciar el temporizador
             function startTimer(shouldSave = true) {
                 if (isRunning) return;
                 isRunning = true;
@@ -1096,21 +948,19 @@
                     }
                 }, 1000);
 
-                if (currentSession === 'work') playMusic(); // Solo durante trabajo
+                if (currentSession === 'work') playMusic();
             }
 
-            // Pausar el temporizador
             function pauseTimer() {
                 if (!isRunning) return;
                 isRunning = false;
                 elements.startPauseBtn.textContent = 'Iniciar';
                 clearInterval(timerInterval);
-                if (currentSession === 'work') pauseMusic(); // Solo durante trabajo
+                if (currentSession === 'work') pauseMusic();
                 clearTimerState();
                 changePalette();
             }
 
-            // Reiniciar el temporizador
             function resetTimer() {
                 clearInterval(timerInterval);
                 isRunning = false;
@@ -1119,21 +969,19 @@
                 elements.timerDisplay.textContent = formatTime(timerRemaining);
                 elements.progressBar.style.width = '0%';
                 elements.progressPercentage.textContent = '0%';
-                if (currentSession === 'work') pauseMusic(); // Solo durante trabajo
+                if (currentSession === 'work') pauseMusic();
                 clearTimerState();
             }
 
-            // Saltar a la siguiente sesión
             function skipSession() {
                 if (isRunning) {
                     clearInterval(timerInterval);
                     isRunning = false;
                 }
-                handleSessionEnd(false); // No auto iniciar
-                elements.startPauseBtn.textContent = 'Iniciar'; // Restablecer botón
+                handleSessionEnd(false);
+                elements.startPauseBtn.textContent = 'Iniciar'; 
             }
 
-            // Manejar el fin de una sesión
             function handleSessionEnd(shouldAutoStart = true) {
                 if (currentSession === 'work') {
                     completedWorkSessions++;
@@ -1143,14 +991,13 @@
                 elements.notificationSound.play();
                 notifyUser(`¡${capitalizeFirstLetter(currentSession)} finalizada!`);
                 
-                // Determinar la siguiente sesión
                 if (currentSession === 'work') {
                     currentSession = 'shortBreak';
                 } else if (currentSession === 'shortBreak') {
                     shortBreaksCompleted++;
                     if (shortBreaksCompleted >= shortBreaksBeforeLongBreak) {
                         currentSession = 'longBreak';
-                        shortBreaksCompleted = 0; // Resetear contador
+                        shortBreaksCompleted = 0;
                     } else {
                         currentSession = 'work';
                     }
@@ -1159,19 +1006,16 @@
                 }
                 updateSessionType();
 
-                // Auto iniciar la siguiente sesión si está habilitado y shouldAutoStart es true
                 if (shouldAutoStart && elements.autoStartCheckbox.checked) {
                     startTimer();
                     changePalette();
                 }
             }
 
-            // Capitalizar la primera letra
             function capitalizeFirstLetter(string) {
                 return string.charAt(0).toUpperCase() + string.slice(1);
             }
 
-            // Notificar al usuario
             function notifyUser(message) {
                 if (Notification.permission === 'granted') {
                     new Notification(message);
@@ -1184,7 +1028,6 @@
                 }
             }
 
-            // Reiniciar la música
             function resetMusic() {
                 elements.backgroundMusic.pause();
                 elements.backgroundMusic.currentTime = 0;
@@ -1193,7 +1036,6 @@
                 }
             }
 
-            // Reproducir música de fondo
             function playMusic() {
                 if (!isMusicMuted && currentSession === 'work') {
                     elements.backgroundMusic.play().then(() => {
@@ -1204,13 +1046,11 @@
                 }
             }
 
-            // Pausar música de fondo
             function pauseMusic() {
                 elements.backgroundMusic.pause();
                 elements.musicIcon.src = "https://img.icons8.com/ios-filled/50/ffffff/mute.png";
             }
 
-            // Cambiar paleta de colores
             function changePalette() {
                 const palette = selectRandomPalette();
                 const props = ['--primary-color', '--secondary-color', '--background-gradient-from', '--background-gradient-to', '--button-gradient-angle', '--cursor-color'];
@@ -1222,14 +1062,12 @@
                 elements.customCursor.style.borderColor = palette.primary;
             }
 
-            // Actualizar barra de progreso
             function updateProgress() {
                 const progress = ((timerDuration - timerRemaining) / timerDuration) * 100;
                 elements.progressBar.style.width = `${progress}%`;
                 elements.progressPercentage.textContent = `${Math.floor(progress)}%`;
             }
 
-            // Guardar el estado del temporizador en localStorage
             function saveTimerState() {
                 localStorage.setItem('timerState', JSON.stringify({
                     endTime,
@@ -1239,42 +1077,38 @@
                 }));
             }
 
-            // Limpiar el estado del temporizador de localStorage
             function clearTimerState() {
                 localStorage.removeItem('timerState');
                 endTime = null;
             }
 
-            // Guardar las duraciones personalizadas
             function saveDurations() {
                 const work = parseInt(elements.workDurationInput.value, 10);
                 const shortBreak = parseInt(elements.shortBreakDurationInput.value, 10);
                 const longBreak = parseInt(elements.longBreakDurationInput.value, 10);
-                const shortBreaksBeforeLongBreakInput = parseInt(elements.shortBreaksBeforeLongBreakInput.value, 10); // Nuevo
+                const shortBreaksBeforeLongBreakVal = parseInt(elements.shortBreaksBeforeLongBreakInput.value, 10);
 
-                if ([work, shortBreak, longBreak, shortBreaksBeforeLongBreakInput].some(d => isNaN(d) || d < 1)) {
-                    alert('Por favor, introduce duraciones válidas (minutos) para todas las sesiones y número válido de descansos cortos antes de un descanso largo.');
+                if ([work, shortBreak, longBreak, shortBreaksBeforeLongBreakVal].some(d => isNaN(d) || d < 1)) {
+                    alert('Por favor, introduce duraciones válidas (minutos) y número válido de descansos cortos.');
                     return;
                 }
 
                 localStorage.setItem('workDuration', work);
                 localStorage.setItem('shortBreakDuration', shortBreak);
                 localStorage.setItem('longBreakDuration', longBreak);
-                localStorage.setItem('shortBreaksBeforeLongBreak', shortBreaksBeforeLongBreakInput); // Nuevo
-
-                shortBreaksBeforeLongBreak = shortBreaksBeforeLongBreakInput; // Actualizar variable
+                localStorage.setItem('shortBreaksBeforeLongBreak', shortBreaksBeforeLongBreakVal);
+                shortBreaksBeforeLongBreak = shortBreaksBeforeLongBreakVal;
 
                 alert('Duraciones guardadas exitosamente.');
                 updateSessionType();
                 changePalette();
             }
 
-            // Cargar duraciones desde localStorage
             function loadDurations() {
                 const work = localStorage.getItem('workDuration');
                 const shortBreak = localStorage.getItem('shortBreakDuration');
                 const longBreak = localStorage.getItem('longBreakDuration');
-                const shortBreaksBeforeLongBreakStored = parseInt(localStorage.getItem('shortBreaksBeforeLongBreak'), 10); // Nuevo
+                const shortBreaksBeforeLongBreakStored = parseInt(localStorage.getItem('shortBreaksBeforeLongBreak'), 10);
 
                 if (work) elements.workDurationInput.value = work;
                 if (shortBreak) elements.shortBreakDurationInput.value = shortBreak;
@@ -1287,7 +1121,6 @@
                 updateSessionType();
             }
 
-            // Añadir tarea
             function addTask(task = {}) {
                 const taskName = task.name || elements.newTaskInput.value.trim();
                 if (!taskName) {
@@ -1320,14 +1153,12 @@
                 }
             }
 
-            // Guardar tarea en localStorage
             function saveTask(task) {
                 const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
                 tasks.push(task);
                 localStorage.setItem('tasks', JSON.stringify(tasks));
             }
 
-            // Guardar todas las tareas
             function saveAllTasks() {
                 const tasks = Array.from(elements.taskList.children).map(li => ({
                     id: li.dataset.id,
@@ -1337,33 +1168,27 @@
                 localStorage.setItem('tasks', JSON.stringify(tasks));
             }
 
-            // Eliminar tarea
             function deleteTask(id) {
                 let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
                 tasks = tasks.filter(task => task.id !== id);
                 localStorage.setItem('tasks', JSON.stringify(tasks));
             }
 
-            // Cargar datos iniciales
             function loadData() {
-                // Cargar sesiones completadas
                 completedWorkSessions = parseInt(localStorage.getItem('completedWorkSessions'), 10) || 0;
                 elements.sessionCounter.textContent = `Sesiones completadas: ${completedWorkSessions}`;
 
-                // Cargar tareas
                 const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
                 tasks.forEach(addTask);
 
-                // Cargar duraciones personalizadas
                 loadDurations();
 
-                // Cargar estado del temporizador
                 const timerState = JSON.parse(localStorage.getItem('timerState') || 'null');
                 if (timerState) {
                     endTime = timerState.endTime;
                     currentSession = timerState.currentSession;
                     completedWorkSessions = timerState.completedWorkSessions || 0;
-                    shortBreaksCompleted = timerState.shortBreaksCompleted || 0; // Nuevo
+                    shortBreaksCompleted = timerState.shortBreaksCompleted || 0; 
                     elements.sessionIndicatorText.textContent = `Tipo de Sesión: ${capitalizeFirstLetter(currentSession)}`;
                     timerDuration = getDurationBySession(currentSession);
                     const now = Date.now();
@@ -1379,24 +1204,20 @@
                     }
                 }
 
-                // Cargar estado de la música
                 isMusicMuted = JSON.parse(localStorage.getItem('isMusicMuted')) || false;
                 elements.backgroundMusic.muted = isMusicMuted;
                 updateMusicIcon();
 
-                // Cargar el estado de auto inicio
                 const isAutoStartEnabled = JSON.parse(localStorage.getItem('isAutoStartEnabled'));
                 elements.autoStartCheckbox.checked = isAutoStartEnabled || false;
             }
 
-            // Actualizar icono de música
             function updateMusicIcon() {
                 elements.musicIcon.src = isMusicMuted
                     ? "https://img.icons8.com/ios-filled/50/ffffff/mute.png"
                     : "https://img.icons8.com/ios-filled/50/ffffff/speaker.png";
             }
 
-            // Cambiar estado de la música
             function toggleMusic() {
                 isMusicMuted = !isMusicMuted;
                 elements.backgroundMusic.muted = isMusicMuted;
@@ -1412,7 +1233,6 @@
                 changePalette();
             }
 
-            // Manejar eventos de botones
             elements.startPauseBtn.addEventListener('click', () => {
                 if (isRunning) {
                     pauseTimer();
@@ -1448,7 +1268,6 @@
                 }
             });
 
-            // Delegación de eventos para botones de tareas
             elements.taskList.addEventListener('click', (e) => {
                 const li = e.target.closest('li');
                 if (!li) return;
@@ -1465,16 +1284,13 @@
                 }
             });
 
-            // Control de música
             elements.musicControl.addEventListener('click', toggleMusic);
 
-            // Movimiento del cursor personalizado
             document.addEventListener('mousemove', (e) => {
                 elements.customCursor.style.left = `${e.clientX}px`;
                 elements.customCursor.style.top = `${e.clientY}px`;
             });
 
-            // Interacción con elementos interactivos
             document.querySelectorAll('.interactive').forEach(elem => {
                 elem.addEventListener('mouseenter', () => {
                     elements.customCursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
@@ -1489,20 +1305,17 @@
                 });
             });
 
-            // Ocultar cursor por defecto
-            document.querySelectorAll('*').forEach(elem => {
-                elem.style.cursor = 'none';
+            // Guardar el estado de auto inicio al cambiar la checkbox
+            elements.autoStartCheckbox.addEventListener('change', () => {
+                localStorage.setItem('isAutoStartEnabled', elements.autoStartCheckbox.checked);
             });
 
-            // Solicitar permiso para notificaciones
             if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
                 Notification.requestPermission();
             }
 
-            // Inicializar datos
             loadData();
 
-            // Funcionalidad para la sección desplegable (Acordeón)
             elements.toggleDurationsBtn.addEventListener('click', () => {
                 elements.dropdownContent.classList.toggle('open');
                 elements.toggleDurationsBtn.classList.toggle('active');
